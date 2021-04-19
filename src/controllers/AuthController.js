@@ -12,6 +12,16 @@ import bcrypt from 'bcrypt'
  * Class represents a controller used to render pages for users.
  */
 export class AuthController {
+  checkLoggedIn (req, res, next) {
+    console.log(req.session.user)
+
+    if (req.session.user) {
+      return res.json({ msg: "user logged in!" })
+    } else {
+      return res.json({ msg: "user not logged in!" })
+    }
+  }
+
   async postLogin (req, res, next) {
     try {
       const { username, password } = req.body
@@ -92,16 +102,10 @@ export class AuthController {
       console.log(err)
       res.status(500).json({ msg: "internal server error", status: 500 }) // byt till createError!
     }
-    
   }
 
-  checkLoggedIn (req, res, next) {
-    console.log(req.session.user)
-
-    if (req.session.user) {
-      return res.json({ msg: "user logged in!" })
-    } else {
-      return res.json({ msg: "user not logged in!" })
-    }
+  logout (req, res, next) {
+    req.session.destroy()
+    res.clearCookie(process.env.SESSION_NAME).json({ msg: "you have been logged out!" }) // fix statuskod
   }
 }
