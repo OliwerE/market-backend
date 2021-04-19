@@ -28,7 +28,7 @@ const schema = new mongoose.Schema({
   },
   password: {
     type: String,
-    minlength: 10,
+    minlength: 5,
     required: true
   },
   city: {

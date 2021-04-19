@@ -12,22 +12,35 @@ import bcrypt from 'bcrypt'
  * Class represents a controller used to render pages for users.
  */
 export class AuthController {
-  postLogin (req, res, next) {
-    const { username, password } = req.body
+  async postLogin (req, res, next) {
+    try {
+      const { username, password } = req.body
+
+      const findUser = await User.find({ username })
+
+      console.log(findUser)
+
+      if (findUser.length === 1 && findUser[0].username === username) {
+        // jämför lösenord
+
+        const isPassword = await bcrypt.compare(password, findUser[0].password)
+
+        if (isPassword) {
+          req.session.user = username
+          res.json({ msg: " Logged In Successfully" }) // fix statuskod
+        } else {
+          console.log('Fel lösen')
+          res.json({ msg: "Wrong password" }) // lägg till statuskod
+        }
+      } else {
+        console.log('error flera users eller inga')
+        res.json({ msg: "Login failed" })
+      }
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ msg: "Internal server error", status: 500 })
+    }
     
-    // console.log('user: ', req.session.user)
-
-    console.log(req.body)
-
-    console.log(username, password)
-
-    req.session.user = username // funk
-
-    // req.session.user = 'test'
-
-    res.json({ msg: " Logged In Successfully" })
-
-    // res.json({ message: "login posted!", status: 200 })
   }
 
   async postRegister (req, res, next) {
@@ -58,6 +71,7 @@ export class AuthController {
             city
           })
 
+          console.log(createUser)
           await createUser.save()
 
           // req.session.userName = username // om skapa session direkt!
