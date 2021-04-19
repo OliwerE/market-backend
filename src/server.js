@@ -2,8 +2,10 @@
 import express from 'express'
 import helmet from 'helmet'
 import logger from 'morgan'
+import cors from 'cors'
 import { router } from './routes/router.js'
 import { connectDB } from './config/mongoose.js'
+// import bodyParser from 'body-parser'
 
 const server = async () => {
   const app = express()
@@ -11,13 +13,25 @@ const server = async () => {
   await connectDB(app)
 
   app.use(helmet())
+  // app.use(cors())
+  app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
   app.use(logger('dev'))
-  app.use(express.json())
+  
+  
+  // app.use(express.urlencoded()) // fungerar nästan
+  app.use(express.json()) // anv?
+  
+  // app.use(express.bodyParser()); // funk ej
 
-  app.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-next();
-});
+  // app.use(express.urlencoded({ extended: false })) // funkar men fel
+
+  // app.use(express.urlencoded());
+
+  // app.use(function(req, res, next) {
+  //   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  //   res.header('Access-Control-Allow-Credentials','true')
+  //   next();
+  // });
 
   app.use('/', router)
 
