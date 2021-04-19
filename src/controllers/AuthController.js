@@ -16,7 +16,7 @@ export class AuthController {
     console.log(req.session.user)
 
     if (req.session.user) {
-      return res.json({ msg: "user logged in!" })
+      return res.json({ msg: "user logged in!", username: req.session.user })
     } else {
       return res.json({ msg: "user not logged in!" })
     }
@@ -37,14 +37,14 @@ export class AuthController {
 
         if (isPassword) {
           req.session.user = username
-          res.json({ msg: " Logged In Successfully" }) // fix statuskod
+          res.status(200).json({ msg: " Logged In Successfully", status: 200 })
         } else {
           console.log('Fel lösen')
-          res.json({ msg: "Wrong password" }) // lägg till statuskod
+          res.status(401).json({ msg: "Wrong password", status: 401 })
         }
       } else {
         console.log('error flera users eller inga')
-        res.json({ msg: "Login failed" })
+        res.status(401).json({ msg: "Invalid credentials", status: 401 }) // 401 rätt status?
       }
     } catch (err) {
       console.log(err)
@@ -71,7 +71,7 @@ export class AuthController {
           console.log(findUsers)
 
           if (findUsers.length === 0) {
-            console.log('ok att skapa user!')
+            console.log(firstname)
             const createUser = new User({
             firstname,
             lastname,
