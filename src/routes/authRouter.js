@@ -14,11 +14,10 @@ const controller = new AuthController()
 router.get('/', (req, res, next) => res.json({message: 'Auth router', status: 200}))
 
 router.post('/login', controller.postLogin)
-
 router.post('/register', controller.postRegister)
+router.post('/logout', controller.logout)
 
 
-router.get('/logout', controller.logout) // temp
 router.get('/check', controller.checkLoggedIn) // TEMP!
 
 router.use('*', (req, res, next) => next(createError(404)))

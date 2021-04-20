@@ -16,9 +16,9 @@ export class AuthController {
     console.log(req.session.user)
 
     if (req.session.user) {
-      return res.json({ msg: "user logged in!", username: req.session.user })
+      return res.json({ msg: "user logged in!", isAuth: true, username: req.session.user })
     } else {
-      return res.json({ msg: "user not logged in!" })
+      return res.json({ msg: "user not logged in!", isAuth: false })
     }
   }
 
@@ -106,6 +106,6 @@ export class AuthController {
 
   logout (req, res, next) {
     req.session.destroy()
-    res.clearCookie(process.env.SESSION_NAME).json({ msg: "you have been logged out!" }) // fix statuskod
+    res.clearCookie(process.env.SESSION_NAME).json({ msg: "you have been logged out!", successfulLogout: true }) // fix statuskod
   }
 }
