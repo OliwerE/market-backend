@@ -108,4 +108,8 @@ export class AuthController {
     req.session.destroy()
     res.clearCookie(process.env.SESSION_NAME).json({ msg: "you have been logged out!", successfulLogout: true }) // fix statuskod
   }
+
+  getUsername (req, res, next) {
+    res.json({ username: req.session.user })
+  }
 }
