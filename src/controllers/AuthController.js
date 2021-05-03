@@ -87,9 +87,9 @@ export class AuthController {
           // req.session.userName = username // om skapa session direkt!
 
 
-            res.json({ msg: "User created, please login" }) // lägg till statuskod!
+            res.status(200).json({ msg: "User created, please login", status: 200 }) // lägg till statuskod!
           } else {
-            res.json({ msg: "User already exist" }) // lägg till statuskod!
+            res.status(409).json({ msg: "User already exist", status: 409}) // lägg till statuskod!
           }
           // om ok lägg till användare i databasen
         } else {
