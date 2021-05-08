@@ -111,4 +111,22 @@ export class AuthController {
   getUsername (req, res, next) {
     res.json({ username: req.session.user })
   }
+
+  async getUserProfile (req, res, next) {
+    const user = (await User.find({ username: req.session.user })).map(U => ({
+        username: U.username,
+        firstname: U.firstname,
+        lastname: U.lastname,
+        phoneNumber: U.phoneNumber,
+        email: U.email,
+        city: U.city
+    }))
+    console.log(user)
+    if (user.length === 1) {
+      res.json(user[0])
+    } else {
+      // ERROR FIXA!
+      console.log('error')
+    }
+  }
 }
