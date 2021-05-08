@@ -59,12 +59,12 @@ export class AuthController {
       console.log(req.body)
       console.log('----/register----')
 
-      const { firstname, lastname, username, phoneNumber, password, passwordRepeat, city } = req.body
+      const { firstname, lastname, username, phoneNumber, password, city, email } = req.body
 
       // fixa: kontrollera att inga form data är tomma här
 
-      if (firstname, lastname, username, phoneNumber, password, passwordRepeat, city) {
-        if (password === passwordRepeat) {
+      if (firstname.trim().length > 0 && lastname.trim().length > 0 && username.trim().length > 0 && phoneNumber.trim().length > 0 && password.trim().length > 0 && passwordRepeat.trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {
+        if (isemail.validate(email)) {
           // kontrollera unik anv namn
           console.log(username)
           const findUsers = await User.find({ username: username })
@@ -78,23 +78,22 @@ export class AuthController {
             username,
             password: await bcrypt.hash(password, 8),
             phoneNumber,
-            city
-          })
+            city,
+            email
+            })
 
-          console.log(createUser)
-          await createUser.save()
+            console.log(createUser)
+            await createUser.save()
 
-          // req.session.userName = username // om skapa session direkt!
-
-
+            // req.session.userName = username // om skapa session direkt!
             res.status(200).json({ msg: "User created, please login", status: 200 }) // lägg till statuskod!
           } else {
             res.status(409).json({ msg: "User already exist", status: 409}) // lägg till statuskod!
           }
-          // om ok lägg till användare i databasen
         } else {
-          res.status(400).json({ msg: "Invalid data (password and repeat don't match!)", status: 400 }) // fixa msg och statuskod??
+          res.status(400).json({ msg: "Email not correct", status: 400 })
         }
+
       } else {
         res.status(400).json({ msg: "Invalid data", status: 400 })
       }
