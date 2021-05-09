@@ -129,4 +129,40 @@ export class AuthController {
       console.log('error')
     }
   }
+
+  async postUpdateProfile (req, res, next) {
+    try{
+      console.log('profil uppdateras!')
+      const { firstname, lastname, phoneNumber, city, email, password, newPassword } = req.body
+    // console.log(newPassword)
+
+    const newData = {
+      firstname,
+      lastname,
+      phoneNumber,
+      city,
+      email
+    }
+
+    if (newPassword) {
+        const user = await User.find({ username: req.session.user })
+        const isPassword = await bcrypt.compare(password, user[0].password)
+        if (isPassword) {
+          newData.password = await bcrypt.hash(newPassword, 8)
+        } else {
+          return res.status(400).json({ msg: 'Current password does not match password in database', status: 400 }) // Rätt statuskod??
+        }
+    } else {
+      console.log('lösenord behöver inte uppdateras!')
+    }
+
+    await User.updateOne({ username: req.session.user }, newData)
+
+    return res.status(200).json({ msg: 'User updated successfully', status: 200 }) // rätt statuskod??
+
+    } catch (err) {
+      console.log(err)
+      return res.status(500).json({ msg: 'Internal server error', status: 500 })
+    }
+  }
 }

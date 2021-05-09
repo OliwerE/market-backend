@@ -21,6 +21,7 @@ router.post('/logout', controller.logout)
 
 
 router.get('/profile', controller.getUserProfile) // Lägg till auth check!
+router.post('/profile', controller.postUpdateProfile) // lägg till auth check??
 
 router.get('/check', controller.checkLoggedIn) // TEMP!
 
