@@ -133,8 +133,8 @@ export class AuthController {
   async postUpdateProfile (req, res, next) {
     try {
       console.log('profil uppdateras!')
+      const { firstname, lastname, phoneNumber, city, email, password, newPassword } = req.body
       if (firstname.trim().length > 0 && lastname.trim().length > 0 && phoneNumber.toString().trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {// obs phonenumber ska ändras till string i db!
-        const { firstname, lastname, phoneNumber, city, email, password, newPassword } = req.body
         // console.log(newPassword)
 
         const newData = {
