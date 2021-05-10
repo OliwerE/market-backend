@@ -24,7 +24,8 @@ export class ListingController {
                 productImage,
                 description,
                 category,
-                price
+                price,
+                owner: req.session.user
               })
 
               console.log(createListing)
@@ -61,5 +62,26 @@ export class ListingController {
       console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
+  }
+
+  async getOwnListings (req, res, next) {
+    try {
+      const foundListings = (await Listing.find({ owner: req.session.user })).map(L => ({
+          id: L._id,
+          title: L.title,
+          listingType: L.listingType,
+          productImage: L.productImage,
+          description: L.description,
+          category: L.category,
+          price: L.price
+      }))
+
+      res.status(200).json({ foundListings })
+
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ msg: 'Internal server error', status: 500 })
+    }
+
   }
 }

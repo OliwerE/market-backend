@@ -13,6 +13,8 @@ const controller = new ListingController()
 
 router.get('/sell', controller.getSellListings)
 
+router.get('/user', controller.getOwnListings)
+
 router.post('/create', controller.createListing)
 
 
