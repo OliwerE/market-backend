@@ -11,6 +11,8 @@ export const router = express.Router()
 
 const controller = new ListingController()
 
+router.get('/sell', controller.getSellListings)
+
 router.post('/create', controller.createListing)
 
 

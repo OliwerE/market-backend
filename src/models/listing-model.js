@@ -19,7 +19,6 @@ const schema = new mongoose.Schema({
   },
   productImage: {
     type: String,
-    unique: true,
     required: true
   },
   description: {
