@@ -82,6 +82,26 @@ export class ListingController {
       console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
+  }
 
+  async getListingById (req, res, next) {
+    try {
+      console.log(req.params.id)
+      const foundListing = (await Listing.find({ _id: req.params.id })).map(L => ({
+          id: L._id,
+          title: L.title,
+          listingType: L.listingType,
+          productImage: L.productImage,
+          description: L.description,
+          category: L.category,
+          price: L.price
+      }))
+
+      res.status(200).json({ foundListing })
+
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ msg: 'Internal server error', status: 500 })
+    }
   }
 }
