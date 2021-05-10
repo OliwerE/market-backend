@@ -8,6 +8,8 @@
 import { User } from '../models/user-model.js'
 import bcrypt from 'bcrypt'
 
+import isEmail from 'isemail'
+
 /**
  * Class represents a controller used to render pages for users.
  */
@@ -63,8 +65,8 @@ export class AuthController {
 
       // fixa: kontrollera att inga form data är tomma här
 
-      if (firstname.trim().length > 0 && lastname.trim().length > 0 && username.trim().length > 0 && phoneNumber.trim().length > 0 && password.trim().length > 0 && passwordRepeat.trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {
-        if (isemail.validate(email)) {
+      if (firstname.trim().length > 0 && lastname.trim().length > 0 && username.trim().length > 0 && phoneNumber.trim().length > 0 && password.trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {
+        if (isEmail.validate(email)) {
           // kontrollera unik anv namn
           console.log(username)
           const findUsers = await User.find({ username: username })
