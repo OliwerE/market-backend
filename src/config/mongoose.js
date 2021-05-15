@@ -56,6 +56,7 @@ export const connectDB = async (application) => {
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, // One day
+      domain: 'https://market-client-1dv613.netlify.app/',
       sameSite: 'lax',
       secure: true
     },
