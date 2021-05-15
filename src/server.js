@@ -15,7 +15,7 @@ const server = async () => {
   app.use(helmet())
   // app.use(cors())
 
-  app.set('trust prox', 1); // heroku
+  app.set('trust proxy', 1); // heroku
   app.use(cors({ origin: process.env.ORIGIN, credentials: true }));
   app.use(logger('dev'))
   
