@@ -55,7 +55,6 @@ export const connectDB = async (application) => {
     saveUninitialized: false, // true = skapas cookie innnan aktiv session!
     cookie: {
       httpOnly: true,
-      domain: process.env.ORIGIN,
       maxAge: 1000 * 60 * 60 * 24, // One day
       sameSite: 'none', // OBS MÅSTE VARA LAX??
       secure: true
