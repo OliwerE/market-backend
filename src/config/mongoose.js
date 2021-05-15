@@ -55,8 +55,9 @@ export const connectDB = async (application) => {
     saveUninitialized: false, // true = skapas cookie innnan aktiv session!
     cookie: {
       httpOnly: true,
+      domain: process.env.ORIGIN,
       maxAge: 1000 * 60 * 60 * 24, // One day
-      sameSite: 'lax',
+      sameSite: 'none', // OBS MÅSTE VARA LAX??
       secure: true
     },
     store: new MongoDBSessionStore({ mongooseConnection: mongoose.connection, clear_interval: 3600 })
