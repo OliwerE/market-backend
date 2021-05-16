@@ -12,6 +12,7 @@ import { Listing } from '../models/listing-model.js'
  */
 export class ListingController {
   async createListing (req, res, next) {
+    console.log('börjar skapa listing!')
     try {
       const {title, productImage, description, category, listingType, price} = req.body
 
