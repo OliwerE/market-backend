@@ -57,6 +57,8 @@ export class ListingController {
         price: L.price
     }))
 
+    
+    foundListings.reverse()
       res.status(200).json({ foundListings })
 
     } catch (err) {
@@ -99,6 +101,28 @@ export class ListingController {
       }))
 
       res.status(200).json({ foundListing })
+
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ msg: 'Internal server error', status: 500 })
+    }
+  }
+
+  async getLatestListings (req, res, next) {
+    try {
+      const latestListings = (await Listing.find({ listingType: 'salj' })).map(L => ({
+          id: L._id,
+          title: L.title,
+          listingType: L.listingType,
+          productImage: L.productImage,
+          // description: L.description,
+          // category: L.category,
+          price: L.price
+      }))
+      
+      // console.log(latestListings.slice(latestListings.length - 5).reverse())
+
+      res.status(200).json(latestListings.slice(latestListings.length - 5).reverse())
 
     } catch (err) {
       console.log(err)
