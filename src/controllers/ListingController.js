@@ -30,9 +30,12 @@ export class ListingController {
               })
 
               console.log(createListing)
-              await createListing.save()
-
-              res.status(200).json({ msg: 'Listing created', status: 200 })
+              var newListingId
+              await createListing.save().then(listing => {
+                newListingId = listing._id
+              })
+              
+              res.status(200).json({ msg: 'Listing created', status: 200, newListingId: newListingId })
         
       } else {
         res.status(400).json({ msg: 'Missing Data', status: 400 }) // kontrollera statuskod!
