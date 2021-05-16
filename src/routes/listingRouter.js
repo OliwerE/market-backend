@@ -12,6 +12,7 @@ export const router = express.Router()
 const controller = new ListingController()
 
 router.get('/sell', controller.getSellListings)
+router.get('/buy', controller.getBuyListings)
 router.get('/user', controller.getOwnListings)
 router.get('/latest', controller.getLatestListings)
 

@@ -50,7 +50,29 @@ export class ListingController {
     }
   }
 
-  async getSellListings (req, res, next) {
+  async getBuyListings (req, res, next) { // obs påminner mkt om getSellListings!
+    try {
+      const foundListings = (await Listing.find({ listingType: 'kop' })).map(L => ({
+        id: L._id,
+        title: L.title,
+        listingType: L.listingType,
+        productImage: L.productImage,
+        description: L.description,
+        category: L.category,
+        price: L.price
+    }))
+
+    
+    foundListings.reverse()
+      res.status(200).json({ foundListings })
+
+    } catch (err) {
+      console.log(err)
+      res.status(500).json({ msg: 'Internal server error', status: 500 })
+    }
+  }
+
+  async getSellListings (req, res, next) {// obs påminner mkt om getBuyListings!
     try {
       const foundListings = (await Listing.find({ listingType: 'salj' })).map(L => ({
         id: L._id,
