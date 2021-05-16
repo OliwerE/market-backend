@@ -7,6 +7,8 @@
 
 import { Listing } from '../models/listing-model.js'
 
+import moment from 'moment'
+
 /**
  * Class represents a controller used to render pages for users.
  */
@@ -34,7 +36,7 @@ export class ListingController {
               await createListing.save().then(listing => {
                 newListingId = listing._id
               })
-              
+
               res.status(200).json({ msg: 'Listing created', status: 200, newListingId: newListingId })
         
       } else {
@@ -100,7 +102,10 @@ export class ListingController {
           productImage: L.productImage,
           description: L.description,
           category: L.category,
-          price: L.price
+          price: L.price,
+          owner: L.owner,
+          isOwner: L.owner === req.session.user ? true : false,
+          date: moment(L.createdAt).fromNow()
       }))
 
       res.status(200).json({ foundListing })
