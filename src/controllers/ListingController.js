@@ -6,6 +6,7 @@
  */
 
 import { Listing } from '../models/listing-model.js'
+import { User } from '../models/user-model.js'
 
 import moment from 'moment'
 
@@ -129,6 +130,11 @@ export class ListingController {
           isOwner: L.owner === req.session.user ? true : false,
           date: moment(L.createdAt).fromNow()
       }))
+
+      const user = (await User.findOne({ username: req.session.user }))
+
+      foundListing[0].phoneNumber = user.phoneNumber
+      foundListing[0].email = user.email
 
       res.status(200).json({ foundListing })
 
