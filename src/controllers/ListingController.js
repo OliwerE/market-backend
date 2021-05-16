@@ -159,4 +159,39 @@ export class ListingController {
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }
+
+  async deleteListing (req, res, next) {
+    try {
+      const listingId = req.params.id
+      const user = req.session.user
+      const owner = (await Listing.findOne({ _id: listingId })).owner
+
+      if (user === owner) {
+        console.log('Är owner! tar bort!')
+
+        await Listing.deleteOne({ _id: listingId })
+        
+        res.status(200).json({ msg: 'Listing has been removed', status: 200})
+        /*
+        , (err, response) => {
+          if (err) {
+            res.status(500).json({ msg: 'Internal Server error', status: 500})
+          } else if (response) {
+            if (response.deletedCount === 0) {
+              res.status(500).json({ msg: 'Could not remove listing', status: 500})
+            } else if (response.deletedCount === 1) {
+              res.status(200).json({ msg: 'Listing has been removed', status: 200})
+            } else {
+              res.status(500).json({ msg: 'Internal Server error', status: 500})
+            }
+          }
+        }
+        */
+      } else {
+        res.status(401).json({ msg: 'Not owner', status: 401})
+      }
+    } catch (err) {
+      console.error(err)
+    }
+  }
 }
