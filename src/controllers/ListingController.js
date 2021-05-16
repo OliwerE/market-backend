@@ -131,7 +131,7 @@ export class ListingController {
           date: moment(L.createdAt).fromNow()
       }))
 
-      const user = (await User.findOne({ username: req.session.user }))
+      const user = (await User.findOne({ username: foundListing[0].owner }))
 
       foundListing[0].phoneNumber = user.phoneNumber
       foundListing[0].email = user.email
