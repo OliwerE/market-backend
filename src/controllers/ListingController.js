@@ -110,7 +110,7 @@ export class ListingController {
 
   async getLatestListings (req, res, next) {
     try {
-      const latestListings = (await Listing.find({ listingType: 'salj' })).map(L => ({
+      const latestListings = (await Listing.find({})).map(L => ({ // { listingType: 'salj' } obs ska hitta både köp och sälj!
           id: L._id,
           title: L.title,
           listingType: L.listingType,
