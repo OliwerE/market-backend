@@ -8,14 +8,12 @@ const schema = new mongoose.Schema({
   firstname: {
     type: String,
     required: true,
-    trim: true,
-    required: true
+    trim: true
   },
   lastname: {
     type: String,
     required: true,
-    trim: true,
-    required: true
+    trim: true
   },
   username: {
     type: String,
@@ -35,7 +33,7 @@ const schema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true
-  }, 
+  },
   email: {
     type: String,
     required: true

@@ -13,6 +13,4 @@ const controller = new QuestionAnswerController()
 
 router.get('/questions', controller.getQuestionAndAnswer)
 
-
-
 router.use('*', (req, res, next) => next(createError(404)))

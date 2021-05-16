@@ -14,16 +14,31 @@ import isEmail from 'isemail'
  * Class represents a controller used to render pages for users.
  */
 export class AuthController {
+  /**
+   * Checks if a user is logged in.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
+   */
   checkLoggedIn (req, res, next) {
     console.log(req.session.user)
 
     if (req.session.user) {
-      return res.json({ msg: "user logged in!", isAuth: true, username: req.session.user })
+      return res.json({ msg: 'user logged in!', isAuth: true, username: req.session.user })
     } else {
-      return res.json({ msg: "user not logged in!", isAuth: false })
+      return res.json({ msg: 'user not logged in!', isAuth: false })
     }
   }
 
+  /**
+   * Validates login credentials and creates a new session.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   */
   async postLogin (req, res, next) {
     try {
       const { username, password } = req.body
@@ -39,22 +54,28 @@ export class AuthController {
 
         if (isPassword) {
           req.session.user = username
-          res.status(200).json({ msg: " Logged In Successfully", status: 200 })
+          res.status(200).json({ msg: ' Logged In Successfully', status: 200 })
         } else {
           console.log('Fel lösen')
-          res.status(401).json({ msg: "Wrong password", status: 401 })
+          res.status(401).json({ msg: 'Wrong password', status: 401 })
         }
       } else {
         console.log('error flera users eller inga')
-        res.status(401).json({ msg: "Invalid credentials", status: 401 }) // 401 rätt status?
+        res.status(401).json({ msg: 'Invalid credentials', status: 401 }) // 401 rätt status?
       }
     } catch (err) {
       console.log(err)
-      res.status(500).json({ msg: "Internal server error", status: 500 })
+      res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
-    
   }
 
+  /**
+   * Creates a new user.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   */
   async postRegister (req, res, next) {
     try {
       console.log('----register----')
@@ -75,53 +96,73 @@ export class AuthController {
           if (findUsers.length === 0) {
             console.log(firstname)
             const createUser = new User({
-            firstname,
-            lastname,
-            username,
-            password: await bcrypt.hash(password, 8),
-            phoneNumber,
-            city,
-            email
+              firstname,
+              lastname,
+              username,
+              password: await bcrypt.hash(password, 8),
+              phoneNumber,
+              city,
+              email
             })
 
             console.log(createUser)
             await createUser.save()
 
             // req.session.userName = username // om skapa session direkt!
-            res.status(200).json({ msg: "User created, please login", status: 200 }) // lägg till statuskod!
+            res.status(200).json({ msg: 'User created, please login', status: 200 }) // lägg till statuskod!
           } else {
-            res.status(409).json({ msg: "User already exist", status: 409}) // lägg till statuskod!
+            res.status(409).json({ msg: 'User already exist', status: 409 }) // lägg till statuskod!
           }
         } else {
-          res.status(400).json({ msg: "Email not correct", status: 400 })
+          res.status(400).json({ msg: 'Email not correct', status: 400 })
         }
-
       } else {
-        res.status(400).json({ msg: "Invalid data", status: 400 })
+        res.status(400).json({ msg: 'Invalid data', status: 400 })
       }
     } catch (err) {
       console.log(err)
-      res.status(500).json({ msg: "internal server error", status: 500 }) // byt till createError!
+      res.status(500).json({ msg: 'internal server error', status: 500 }) // byt till createError!
     }
   }
 
+  /**
+   * Logs out user.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   */
   logout (req, res, next) {
     req.session.destroy()
-    res.clearCookie(process.env.SESSION_NAME).json({ msg: "you have been logged out!", successfulLogout: true }) // fix statuskod
+    res.clearCookie(process.env.SESSION_NAME).json({ msg: 'you have been logged out!', successfulLogout: true }) // fix statuskod
   }
 
+  /**
+   * Gets username from the session user.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   */
   getUsername (req, res, next) {
     res.json({ username: req.session.user })
   }
 
+  /**
+   * Gets user profile data.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   */
   async getUserProfile (req, res, next) {
     const user = (await User.find({ username: req.session.user })).map(U => ({
-        username: U.username,
-        firstname: U.firstname,
-        lastname: U.lastname,
-        phoneNumber: U.phoneNumber,
-        email: U.email,
-        city: U.city
+      username: U.username,
+      firstname: U.firstname,
+      lastname: U.lastname,
+      phoneNumber: U.phoneNumber,
+      email: U.email,
+      city: U.city
     }))
     console.log(user)
     if (user.length === 1) {
@@ -132,11 +173,19 @@ export class AuthController {
     }
   }
 
+  /**
+   * Updates a user profile.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
+   */
   async postUpdateProfile (req, res, next) {
     try {
       console.log('profil uppdateras!')
       const { firstname, lastname, phoneNumber, city, email, password, newPassword } = req.body
-      if (firstname.trim().length > 0 && lastname.trim().length > 0 && phoneNumber.toString().trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {// obs phonenumber ska ändras till string i db!
+      if (firstname.trim().length > 0 && lastname.trim().length > 0 && phoneNumber.toString().trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) { // obs phonenumber ska ändras till string i db!
         // console.log(newPassword)
 
         const newData = {
@@ -148,13 +197,13 @@ export class AuthController {
         }
 
         if (newPassword) {
-            const user = await User.find({ username: req.session.user })
-            const isPassword = await bcrypt.compare(password, user[0].password)
-            if (isPassword) {
-              newData.password = await bcrypt.hash(newPassword, 8)
-            } else {
-              return res.status(400).json({ msg: 'Current password does not match password in database', status: 400 }) // Rätt statuskod??
-            }
+          const user = await User.find({ username: req.session.user })
+          const isPassword = await bcrypt.compare(password, user[0].password)
+          if (isPassword) {
+            newData.password = await bcrypt.hash(newPassword, 8)
+          } else {
+            return res.status(400).json({ msg: 'Current password does not match password in database', status: 400 }) // Rätt statuskod??
+          }
         } else {
           console.log('lösenord behöver inte uppdateras!')
         }

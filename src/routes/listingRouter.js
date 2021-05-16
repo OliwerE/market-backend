@@ -22,5 +22,4 @@ router.get('/:id', controller.getListingById)
 
 router.delete('/delete/:id', controller.deleteListing)
 
-
 router.use('*', (req, res, next) => next(createError(404)))

@@ -8,14 +8,12 @@ const schema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    trim: true,
-    required: true
+    trim: true
   },
   listingType: {
     type: String,
     required: true,
-    trim: true,
-    required: true
+    trim: true
   },
   productImage: {
     type: String,
@@ -36,8 +34,8 @@ const schema = new mongoose.Schema({
   },
   owner: {
     type: String,
-    required: true 
-  } 
+    required: true
+  }
 }, {
   timestamps: true,
   versionKey: false

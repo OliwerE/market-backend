@@ -11,7 +11,7 @@ import { router as questionAnswerRouter } from './questionAnswerRouter.js'
 
 export const router = express.Router()
 
-router.get('/', (req, res, next) => res.json({message: 'Hello World!', status: 200}))
+router.get('/', (req, res, next) => res.json({ message: 'Hello World!', status: 200 }))
 router.use('/auth', authRouter)
 router.use('/listings', listingRouter)
 router.use('/help', questionAnswerRouter)
