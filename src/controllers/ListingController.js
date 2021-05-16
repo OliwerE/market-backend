@@ -15,7 +15,7 @@ export class ListingController {
     try {
       const {title, productImage, description, category, listingType, price} = req.body
 
-      if (title.trim().length > 0 /* fixa: || productImage.length > 0 */&& description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
+      if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
         console.log('skapa annons')
 
         const createListing = new Listing({
