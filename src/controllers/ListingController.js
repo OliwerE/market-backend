@@ -168,7 +168,7 @@ export class ListingController {
       res.status(200).json({ foundListing })
     } catch (err) {
       console.log(err)
-      res.status(500).json({ msg: 'Internal server error', status: 500 })
+      res.status(404).json({ msg: 'Listing not found', status: 404 })
     }
   }
 
