@@ -57,6 +57,35 @@ export class ListingController {
     }
   }
 
+  async updateListing (req, res, next) {
+    try {
+      console.log(req.params.id)
+      const { title, productImage, description, category, listingType, price } = req.body
+      if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
+        const _res = res
+        await Listing.updateOne({ _id: req.params.id }, { title, productImage, description, category, listingType, price }, (err, res) => {
+        if (err) {
+            _res.status(500).json({ msg: 'Internal Server Error', status: 500})
+          }
+          if (res) {
+            if (res.n === 0) {
+              _res.status(500).json({ msg: 'Could not update snippet', status: 500})
+            } else if (res.n === 1) {
+              _res.status(200).json({ msg: 'Listing has been updated', status: 500})
+            } else {
+              _res.status(500).json({ msg: 'Internal Server Error', status: 500})
+            }
+          } 
+        })
+      } else {
+        res.status(400).json({ msg: 'Missing Data', status: 400 }) // kontrollera statuskod!
+      }
+    } catch (err) {
+      res.status(500).json({ msg: 'Internal Server Error', status: 500})
+    }
+    
+  }
+
   /**
    * Gets all buy listings.
    *
