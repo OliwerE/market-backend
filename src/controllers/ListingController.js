@@ -175,7 +175,7 @@ export class ListingController {
    */
   async getListingById (req, res, next) {
     try {
-      console.log(req.params.id)
+      console.log('id: ' + req.params.id)
       const foundListing = (await Listing.find({ _id: req.params.id })).map(L => ({
         id: L._id,
         title: L.title,

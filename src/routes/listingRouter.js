@@ -59,6 +59,9 @@ router.get('/user', authorizeRequest, controller.getOwnListings)
 router.get('/latest', controller.getLatestListings)
 
 router.post('/create', authorizeRequest, controller.createListing)
+
+router.get('/update/:id', authorizeRequest, isOwner, controller.getListingById) // getListingById is not protected. Used to help front end.
+
 router.post('/update/:id', authorizeRequest, isOwner, controller.updateListing)
 
 router.get('/:id', controller.getListingById)
