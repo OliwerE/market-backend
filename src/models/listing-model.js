@@ -41,8 +41,4 @@ const schema = new mongoose.Schema({
   versionKey: false
 })
 
-schema.index({
-  '$**': 'text'
-})
-
 export const Listing = mongoose.model('Listing', schema)
