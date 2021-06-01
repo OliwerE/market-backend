@@ -60,10 +60,9 @@ router.get('/latest', controller.getLatestListings)
 
 router.post('/create', authorizeRequest, controller.createListing)
 
-router.get('/update/:id', authorizeRequest, isOwner, controller.getListingById) // getListingById is not protected. Used to help front end.
-
 router.post('/update/:id', authorizeRequest, isOwner, controller.updateListing)
 
+router.get('/auth/:id', authorizeRequest, isOwner, controller.getListingById) // Not protected, used to help client authorize
 router.get('/:id', controller.getListingById)
 
 router.delete('/delete/:id', authorizeRequest, isOwner, controller.deleteListing)
