@@ -262,4 +262,37 @@ export class ListingController {
       res.status(500).json({ msg: 'Internal Server error', status: 500})
     }
   }
+
+  async searchListings (req, res, next) {
+    try {
+      const { listingType, query } = req.query
+      console.log(req.query)
+      console.log(listingType)
+      console.log(query)
+      if ((listingType === 'buy' || listingType === 'sell') && query.trim().length > 0) {
+        var type = 'salj'
+        if (listingType === 'buy') {
+          type = 'kop'
+        }
+
+          const foundListings = (await Listing.find({ listingType: type, $text: {$search: query} })).map(L => ({
+            id: L._id,
+            title: L.title,
+            listingType: L.listingType,
+            productImage: L.productImage,
+            description: L.description,
+            category: L.category,
+            price: L.price
+          }))
+
+          console.log(foundListings)
+
+        res.status(200).json({ foundListings })
+      } else {
+        res.status(400).json({msg:'Missing query or listingType', status: 400})
+      }
+    } catch (err) {
+      res.status(500).json({msg:'Internal Server Error', status: 500})
+    }
+  }
 }

@@ -58,6 +58,8 @@ router.get('/buy', controller.getBuyListings)
 router.get('/user', authorizeRequest, controller.getOwnListings)
 router.get('/latest', controller.getLatestListings)
 
+router.get('/search', controller.searchListings)
+
 router.post('/create', authorizeRequest, controller.createListing)
 
 router.post('/update/:id', authorizeRequest, isOwner, controller.updateListing)
