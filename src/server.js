@@ -6,6 +6,7 @@ import cors from 'cors'
 import { router } from './routes/router.js'
 import { connectDB } from './config/mongoose.js'
 // import bodyParser from 'body-parser'
+import csurf from 'csurf'
 
 /**
  * Starts the express server.
@@ -16,7 +17,6 @@ const server = async () => {
   await connectDB(app)
 
   app.use(helmet())
-  // app.use(cors())
 
   app.set('trust proxy', 1) // heroku
   app.use(cors({ origin: process.env.ORIGIN, credentials: true }))
@@ -37,6 +37,21 @@ const server = async () => {
   //   res.header('Access-Control-Allow-Credentials','true')
   //   next();
   // });
+
+  app.use(csurf({}))
+
+  app.use((req, res, next) => {
+    res.cookie('XSRF-TOKEN', req.csrfToken()) // Creates new csrf token on each request.
+    return next()
+  })
+
+  // Csurf token errors.
+  app.use((err, req, res, next) => {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err)
+  console.log(err)
+  console.log(req.headers)
+  res.status(403).json({ msg: 'csurf token not valid' })
+  })
 
   app.use('/', router)
 

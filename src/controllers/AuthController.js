@@ -32,6 +32,12 @@ export class AuthController {
     }
   }
 
+  getCsrfToken (req, res, next) {
+    // res.json({ csrfToken: req.csrfToken() })
+    res.cookie('XSRF-TOKEN', req.csrfToken())
+    res.json({})
+  }
+
   /**
    * Validates login credentials and creates a new session.
    *
