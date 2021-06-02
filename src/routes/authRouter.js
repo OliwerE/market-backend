@@ -35,7 +35,7 @@ router.get('/username', authorizeRequest, controller.getUsername)
 
 router.post('/login', controller.postLogin)
 router.post('/register', controller.postRegister)
-router.post('/logout',authorizeRequest, controller.logout)
+router.post('/logout', authorizeRequest, controller.logout)
 
 router.get('/profile', authorizeRequest, controller.getUserProfile)
 router.post('/profile', authorizeRequest, controller.postUpdateProfile)

@@ -38,9 +38,9 @@ const authorizeRequest = (req, res, next) => {
  */
 const isOwner = async (req, res, next) => {
   try {
-    //find listing
+    // find listing
     const listing = (await Listing.find({ _id: req.params.id })).map(L => ({
-      owner: L.owner,
+      owner: L.owner
     }))
 
     if (req.session.user === listing[0].owner) {
@@ -50,7 +50,7 @@ const isOwner = async (req, res, next) => {
     }
   } catch (err) { // OBS not found blir också 500, ska vara 404!
     return res.status(500).json({ msg: 'Internal Server Error', status: 500 })
-  } 
+  }
 }
 
 router.get('/sell', controller.getSellListings)

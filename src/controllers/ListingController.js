@@ -57,6 +57,13 @@ export class ListingController {
     }
   }
 
+  /**
+   * Updates a listing in the database.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   */
   async updateListing (req, res, next) {
     try {
       console.log(req.params.id)
@@ -64,26 +71,25 @@ export class ListingController {
       if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
         const _res = res
         await Listing.updateOne({ _id: req.params.id }, { title, productImage, description, category, listingType, price }, (err, res) => {
-        if (err) {
-            _res.status(500).json({ msg: 'Internal Server Error', status: 500})
+          if (err) {
+            _res.status(500).json({ msg: 'Internal Server Error', status: 500 })
           }
           if (res) {
             if (res.n === 0) {
-              _res.status(500).json({ msg: 'Could not update snippet', status: 500})
+              _res.status(500).json({ msg: 'Could not update snippet', status: 500 })
             } else if (res.n === 1) {
-              _res.status(200).json({ msg: 'Listing has been updated', status: 500})
+              _res.status(200).json({ msg: 'Listing has been updated', status: 500 })
             } else {
-              _res.status(500).json({ msg: 'Internal Server Error', status: 500})
+              _res.status(500).json({ msg: 'Internal Server Error', status: 500 })
             }
-          } 
+          }
         })
       } else {
         res.status(400).json({ msg: 'Missing Data', status: 400 }) // kontrollera statuskod!
       }
     } catch (err) {
-      res.status(500).json({ msg: 'Internal Server Error', status: 500})
+      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
-    
   }
 
   /**
@@ -259,10 +265,17 @@ export class ListingController {
       */
     } catch (err) {
       console.error(err)
-      res.status(500).json({ msg: 'Internal Server error', status: 500})
+      res.status(500).json({ msg: 'Internal Server error', status: 500 })
     }
   }
 
+  /**
+   * Search listings based on listing type and query.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   */
   async searchListings (req, res, next) {
     try {
       const { listingType, query } = req.query
@@ -270,29 +283,29 @@ export class ListingController {
       console.log(listingType)
       console.log(query)
       if ((listingType === 'buy' || listingType === 'sell') && query.trim().length > 0) {
-        var type = 'salj'
+        let type = 'salj'
         if (listingType === 'buy') {
           type = 'kop'
         }
 
-          const foundListings = (await Listing.find({ listingType: type, $text: {$search: query} })).map(L => ({
-            id: L._id,
-            title: L.title,
-            listingType: L.listingType,
-            productImage: L.productImage,
-            description: L.description,
-            category: L.category,
-            price: L.price
-          }))
+        const foundListings = (await Listing.find({ listingType: type, $text: { $search: query } })).map(L => ({
+          id: L._id,
+          title: L.title,
+          listingType: L.listingType,
+          productImage: L.productImage,
+          description: L.description,
+          category: L.category,
+          price: L.price
+        }))
 
-          console.log(foundListings)
+        console.log(foundListings)
 
         res.status(200).json({ foundListings })
       } else {
-        res.status(400).json({msg:'Missing query or listingType', status: 400})
+        res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
       }
     } catch (err) {
-      res.status(500).json({msg:'Internal Server Error', status: 500})
+      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
   }
 }
