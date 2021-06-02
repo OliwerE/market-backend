@@ -33,7 +33,7 @@ router.get('/', (req, res, next) => res.json({ message: 'Auth router', status: 2
 
 router.get('/username', authorizeRequest, controller.getUsername)
 
-router.get('/csrf', controller.getCsrfToken) // OBS denna route används ej nu pga alla get får ny token i server.js! byt till denna??
+router.get('/csurf', controller.getCsrfToken) // OBS denna route används ej nu pga alla get får ny token i server.js! byt till denna??
 
 router.post('/login', controller.postLogin)
 router.post('/register', controller.postRegister)

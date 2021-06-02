@@ -40,10 +40,10 @@ const server = async () => {
 
   app.use(csurf({}))
 
-  app.use((req, res, next) => {
-    res.cookie('XSRF-TOKEN', req.csrfToken()) // Creates new csrf token on each request.
-    return next()
-  })
+  // app.use((req, res, next) => {
+  //   res.cookie('XSRF-TOKEN', req.csrfToken()) // Creates new csrf token on each request.
+  //   return next()
+  // })
 
   // Csurf token errors.
   app.use((err, req, res, next) => {
