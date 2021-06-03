@@ -35,6 +35,10 @@ const schema = new mongoose.Schema({
   owner: {
     type: String,
     required: true
+  },
+    queue: {
+    type: Array,
+    required: true
   }
 }, {
   timestamps: true,

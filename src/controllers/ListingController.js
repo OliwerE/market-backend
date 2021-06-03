@@ -36,7 +36,8 @@ export class ListingController {
           description,
           category,
           price,
-          owner: req.session.user
+          owner: req.session.user,
+          queue: []
         })
 
         console.log(createListing)
