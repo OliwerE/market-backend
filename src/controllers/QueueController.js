@@ -6,6 +6,7 @@
  */
 
 import { Listing } from '../models/listing-model.js'
+import { User } from '../models/user-model.js'
 
 /**
  * Class represents a controller used to render pages for users.
@@ -69,6 +70,28 @@ export class QueueController {
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
-  }  
+  }
 
+  async getListingQueueByIdAsOwner (req, res, next) {
+    try {
+      const db = (await Listing.find({ _id: req.params.id })).map(L => ({
+        queue: L.queue
+      }))
+      const users = db[0].queue
+      const queueUserDetails = []
+
+      for (let i = 0; i < users.length; i++) {
+        const db = (await User.find({ username: users[i] })).map(U => ({
+          username: U.username,
+          email: U.email,
+          phoneNumber: U.phoneNumber
+        }))
+        queueUserDetails.push(db[0])
+      }
+
+      res.status(200).json({queueUserDetails})
+    } catch (err) {
+      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
+    }
+  }
 }
