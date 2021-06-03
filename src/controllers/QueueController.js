@@ -11,19 +11,64 @@ import { Listing } from '../models/listing-model.js'
  * Class represents a controller used to render pages for users.
  */
 export class QueueController {
-  async getQueueById (req, res, next) {
+  async getListingQueueById (req, res, next) {
     try {
-      console.log('--queueby id startar--')
-      console.log(req.params.id)
       const foundQueue = (await Listing.find({ _id: req.params.id })).map(L => ({
-        queue: L.queue
+        queue: L.queue,
+        owner: L.owner
       }))
 
-      console.log(foundQueue[0])
+      const resObj = {
+        queue: foundQueue[0].queue,
+        isOwner: (req.session.user === foundQueue[0].owner ? true : false)
+      }
 
-      res.json(foundQueue[0])
+      if (foundQueue[0].queue.indexOf(req.session.user) >= 0) { // if session user exist in queue
+        resObj.isInQueue = true
+        resObj.placeInQueue = foundQueue[0].queue.indexOf(req.session.user) + 1
+      } else {
+        resObj.isInQueue = false
+      }
+      res.json(resObj)
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
   }
+
+  async joinListingQueueById (req, res, next) {
+    try {
+      const db = (await Listing.find({ _id: req.params.id })).map(L => ({
+        queue: L.queue
+      }))
+      db[0].queue.push(req.session.user) // Adds current user to queue
+
+      await Listing.updateOne({ _id: req.params.id }, { queue: db[0].queue })
+
+      res.status(200).json({ msg: 'User added to queue', status: 200 })
+    } catch (err) {
+      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
+    }
+  }  
+
+  async leaveListingQueueById (req, res, next) {
+    try {
+      const db = (await Listing.find({ _id: req.params.id })).map(L => ({
+        queue: L.queue
+      }))
+
+      const indexToRemove = db[0].queue.indexOf(req.session.user)
+      if (indexToRemove > -1) {
+        db[0].queue.splice(indexToRemove, 1)
+      } else {
+        res.status(404).json({ msg: 'User not in queue', status: 404 })
+      }
+
+      await Listing.updateOne({ _id: req.params.id }, { queue: db[0].queue })
+
+      res.status(200).json({ msg: 'User removed from queue', status: 200 })
+    } catch (err) {
+      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
+    }
+  }  
+
 }
