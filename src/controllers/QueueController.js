@@ -13,6 +13,40 @@ import { User } from '../models/user-model.js'
  */
 export class QueueController {
   /**
+   * Get listings where the user is in queue.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
+   */
+  async getUserInQueueListings (req, res, next) {
+    try {
+      const listingsWithUserInQueue = (await Listing.find({})).map(L => {
+        const userInQueue = L.queue.indexOf(req.session.user)
+        if (userInQueue > -1) {
+          return {
+            id: L._id,
+            title: L.title,
+            listingType: L.listingType,
+            productImage: L.productImage,
+            description: L.description,
+            category: L.category,
+            price: L.price
+          }
+        } else {
+          return undefined
+        }
+      }).filter((x) => x !== undefined)
+
+      listingsWithUserInQueue.reverse()
+      res.status(200).json({ listingsWithUserInQueue })
+    } catch (err) {
+      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
+    }
+  }
+
+  /**
    * Get listing queue.
    *
    * @param {object} req - The request object.
