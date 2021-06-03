@@ -166,6 +166,7 @@ export class ListingController {
         price: L.price
       }))
 
+      foundListings.reverse()
       res.status(200).json({ foundListings })
     } catch (err) {
       console.log(err)

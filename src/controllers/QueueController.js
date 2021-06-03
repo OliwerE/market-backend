@@ -22,7 +22,7 @@ export class QueueController {
    */
   async getUserInQueueListings (req, res, next) {
     try {
-      const listingsWithUserInQueue = (await Listing.find({})).map(L => {
+      const foundListings = (await Listing.find({})).map(L => {
         const userInQueue = L.queue.indexOf(req.session.user)
         if (userInQueue > -1) {
           return {
@@ -39,8 +39,8 @@ export class QueueController {
         }
       }).filter((x) => x !== undefined)
 
-      listingsWithUserInQueue.reverse()
-      res.status(200).json({ listingsWithUserInQueue })
+      foundListings.reverse()
+      res.status(200).json({ foundListings })
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
