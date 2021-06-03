@@ -36,7 +36,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true
   },
-    queue: {
+  queue: {
     type: Array,
     required: true
   }

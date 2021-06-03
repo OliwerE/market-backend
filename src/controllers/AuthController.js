@@ -32,6 +32,13 @@ export class AuthController {
     }
   }
 
+  /**
+   * Get new csrf token.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   */
   getCsrfToken (req, res, next) {
     // res.json({ csrfToken: req.csrfToken() })
     res.cookie('XSRF-TOKEN', req.csrfToken())

@@ -12,6 +12,14 @@ import { User } from '../models/user-model.js'
  * Class represents a controller used to render pages for users.
  */
 export class QueueController {
+  /**
+   * Get listing queue.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
+   */
   async getListingQueueById (req, res, next) {
     try {
       const foundQueue = (await Listing.find({ _id: req.params.id })).map(L => ({
@@ -21,7 +29,7 @@ export class QueueController {
 
       const resObj = {
         queue: foundQueue[0].queue,
-        isOwner: (req.session.user === foundQueue[0].owner ? true : false)
+        isOwner: (req.session.user === foundQueue[0].owner)
       }
 
       if (foundQueue[0].queue.indexOf(req.session.user) >= 0) { // if session user exist in queue
@@ -36,6 +44,14 @@ export class QueueController {
     }
   }
 
+  /**
+   * Add user to listing queue.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
+   */
   async joinListingQueueById (req, res, next) {
     try {
       const db = (await Listing.find({ _id: req.params.id })).map(L => ({
@@ -49,8 +65,16 @@ export class QueueController {
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
-  }  
+  }
 
+  /**
+   * Remove user from listing queue.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
+   */
   async leaveListingQueueById (req, res, next) {
     try {
       const db = (await Listing.find({ _id: req.params.id })).map(L => ({
@@ -72,6 +96,14 @@ export class QueueController {
     }
   }
 
+  /**
+   * Get listing queue with contact details.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
+   */
   async getListingQueueByIdAsOwner (req, res, next) {
     try {
       const db = (await Listing.find({ _id: req.params.id })).map(L => ({
@@ -89,7 +121,7 @@ export class QueueController {
         queueUserDetails.push(db[0])
       }
 
-      res.status(200).json({queueUserDetails})
+      res.status(200).json({ queueUserDetails })
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
