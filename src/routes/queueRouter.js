@@ -77,6 +77,7 @@ const isOwner = async (req, res, next) => {
   }
 }
 
+router.delete('/owner/remove/:id', authorizeRequest, isOwner, controller.ownerRemoveUserFromListingQueue)
 router.post('/join/:id', authorizeRequest, notOwner, controller.joinListingQueueById)
 router.delete('/leave/:id', authorizeRequest, notOwner, controller.leaveListingQueueById)
 router.get('/:id', controller.getListingQueueById)

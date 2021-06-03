@@ -107,7 +107,8 @@ export class QueueController {
   async getListingQueueByIdAsOwner (req, res, next) {
     try {
       const db = (await Listing.find({ _id: req.params.id })).map(L => ({
-        queue: L.queue
+        queue: L.queue,
+        title: L.title
       }))
       const users = db[0].queue
       const queueUserDetails = []
@@ -121,7 +122,40 @@ export class QueueController {
         queueUserDetails.push(db[0])
       }
 
-      res.status(200).json({ queueUserDetails })
+      const data = {
+        title: db[0].title,
+        queueUserDetails
+      }
+
+      res.status(200).json(data)
+    } catch (err) {
+      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
+    }
+  }
+
+  /**
+   * Queued user removed by admin.
+   *
+   * @param {object} req - The request object.
+   * @param {object} res - The response object.
+   * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
+   */
+  async ownerRemoveUserFromListingQueue (req, res, next) {
+    try {
+      const db = (await Listing.find({ _id: req.params.id })).map(L => ({
+        queue: L.queue
+      }))
+
+      if (req.body.index > -1 && req.body.index < db[0].queue.length) {
+        db[0].queue.splice(req.body.index, 1)
+      } else {
+        res.status(404).json({ msg: 'User not in queue', status: 404 })
+      }
+
+      await Listing.updateOne({ _id: req.params.id }, { queue: db[0].queue })
+
+      res.status(200).json({ msg: 'User removed from queue', status: 200 })
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
