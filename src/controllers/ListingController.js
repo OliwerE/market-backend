@@ -111,8 +111,10 @@ export class ListingController {
    * @param {object} res - The response object.
    * @param {Function} next - Next function.
    */
-  async getBuyListings (req, res, next) { // obs påminner mkt om getSellListings!
+  async getBuyListings (req, res, next) { // Ta bort!! ersätt med kombinerad sell/buy!
     try {
+      const pageSize = 8
+      const page = parseInt(req.query.page || 0) // First 8 if no query.
       const { category } = req.query
       if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === undefined)) {
         return res.status(400).json({ msg: 'Invalid category', status:  400})
@@ -124,7 +126,7 @@ export class ListingController {
         findObj = { listingType: 'kop'}
       }
 
-      const foundListings = (await Listing.find(findObj)).map(L => ({
+      const foundListings = (await Listing.find(findObj).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
         id: L._id,
         title: L.title,
         listingType: L.listingType,
@@ -134,8 +136,10 @@ export class ListingController {
         price: L.price
       }))
 
-      foundListings.reverse()
-      res.status(200).json({ foundListings })
+      const totalListings = await Listing.countDocuments(findObj)
+      const totalPages = Math.ceil(totalListings / pageSize)
+
+      res.status(200).json({ totalPages, foundListings })
     } catch (err) {
       console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
@@ -151,6 +155,8 @@ export class ListingController {
    */
   async getSellListings (req, res, next) { // obs påminner mkt om getBuyListings!
     try {
+      const pageSize = 8
+      const page = parseInt(req.query.page || 0) // First 8 if no query.
       const { category } = req.query
       if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === undefined)) {
         console.log('valde 400')
@@ -165,7 +171,7 @@ export class ListingController {
         return res.status(400).json({ msg: 'Invalid category', status: 400 })
       }
 
-      const foundListings = (await Listing.find(findObj)).map(L => ({
+      const foundListings = (await Listing.find(findObj).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
         id: L._id,
         title: L.title,
         listingType: L.listingType,
@@ -175,8 +181,10 @@ export class ListingController {
         price: L.price
       }))
 
-      foundListings.reverse()
-      res.status(200).json({ foundListings })
+      const totalListings = await Listing.countDocuments(findObj)
+      const totalPages = Math.ceil(totalListings / pageSize)
+
+      res.status(200).json({ totalPages, foundListings })
     } catch (err) {
       console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
