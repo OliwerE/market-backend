@@ -22,25 +22,23 @@ export class QueueController {
    */
   async getUserInQueueListings (req, res, next) {
     try {
-      const foundListings = (await Listing.find({})).map(L => {
-        const userInQueue = L.queue.indexOf(req.session.user)
-        if (userInQueue > -1) {
-          return {
-            id: L._id,
-            title: L.title,
-            listingType: L.listingType,
-            productImage: L.productImage,
-            description: L.description,
-            category: L.category,
-            price: L.price
-          }
-        } else {
-          return undefined
-        }
-      }).filter((x) => x !== undefined)
+      const pageSize = 8
+      const page = parseInt(req.query.page || 0) // First 8 if no query.
+      
+      const foundListings = (await Listing.find({ queue: req.session.user }).sort({ _id: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
+        id: L._id,
+        title: L.title,
+        listingType: L.listingType,
+        productImage: L.productImage,
+        description: L.description,
+        category: L.category,
+        price: L.price
+      }))
 
-      foundListings.reverse()
-      res.status(200).json({ foundListings })
+      const totalListings = await Listing.countDocuments({ queue: req.session.user })
+      const totalPages = Math.ceil(totalListings / pageSize)
+
+      res.status(200).json({ totalPages, foundListings })
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }

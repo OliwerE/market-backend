@@ -200,7 +200,9 @@ export class ListingController {
    */
   async getOwnListings (req, res, next) {
     try {
-      const foundListings = (await Listing.find({ owner: req.session.user })).map(L => ({
+      const pageSize = 8
+      const page = parseInt(req.query.page || 0) // First 8 if no query.
+      const foundListings = (await Listing.find({ owner: req.session.user }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
         id: L._id,
         title: L.title,
         listingType: L.listingType,
@@ -210,8 +212,10 @@ export class ListingController {
         price: L.price
       }))
 
-      foundListings.reverse()
-      res.status(200).json({ foundListings })
+      const totalListings = await Listing.countDocuments({ owner: req.session.user })
+      const totalPages = Math.ceil(totalListings / pageSize)
+
+      res.status(200).json({ totalPages, foundListings })
     } catch (err) {
       console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
@@ -324,6 +328,8 @@ export class ListingController {
    */
   async searchListings (req, res, next) {
     try {
+      const pageSize = 8
+      const page = parseInt(req.query.page || 0) // First 8 if no query.
       const { listingType, query } = req.query
       console.log(req.query)
       console.log(listingType)
@@ -334,7 +340,7 @@ export class ListingController {
           type = 'kop'
         }
 
-        const foundListings = (await Listing.find({ listingType: type, $text: { $search: query } })).map(L => ({
+        const foundListings = (await Listing.find({ listingType: type, $text: { $search: query } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
           id: L._id,
           title: L.title,
           listingType: L.listingType,
@@ -344,9 +350,10 @@ export class ListingController {
           price: L.price
         }))
 
-        console.log(foundListings)
+        const totalListings = await Listing.countDocuments({ listingType: type, $text: { $search: query } })
+        const totalPages = Math.ceil(totalListings / pageSize)
 
-        res.status(200).json({ foundListings })
+        res.status(200).json({ totalPages, foundListings })
       } else {
         res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
       }
