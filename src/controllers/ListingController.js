@@ -26,6 +26,11 @@ export class ListingController {
     try {
       const { title, productImage, description, category, listingType, price } = req.body
 
+      // Categories will be stored in mongoDB and managed by an admin page in the future.
+      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === 'choose')) {
+        return res.status(400).json({ msg: 'Invalid category', status:  400})
+      }
+
       if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
         console.log('skapa annons')
 
@@ -69,6 +74,12 @@ export class ListingController {
     try {
       console.log(req.params.id)
       const { title, productImage, description, category, listingType, price } = req.body
+
+      // Categories will be stored in mongoDB and managed by an admin page in the future.
+      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === 'choose')) {
+        return res.status(400).json({ msg: 'Invalid category', status:  400})
+      }
+
       if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
         const _res = res
         await Listing.updateOne({ _id: req.params.id }, { title, productImage, description, category, listingType, price }, (err, res) => {
@@ -102,7 +113,18 @@ export class ListingController {
    */
   async getBuyListings (req, res, next) { // obs påminner mkt om getSellListings!
     try {
-      const foundListings = (await Listing.find({ listingType: 'kop' })).map(L => ({
+      const { category } = req.query
+      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === 'choose' || category === undefined)) {
+        return res.status(400).json({ msg: 'Invalid category', status:  400})
+      }
+      var findObj = {}
+      if (category) {
+        findObj = { listingType: 'kop', category}
+      } else {
+        findObj = { listingType: 'kop'}
+      }
+
+      const foundListings = (await Listing.find(findObj)).map(L => ({
         id: L._id,
         title: L.title,
         listingType: L.listingType,
@@ -129,7 +151,21 @@ export class ListingController {
    */
   async getSellListings (req, res, next) { // obs påminner mkt om getBuyListings!
     try {
-      const foundListings = (await Listing.find({ listingType: 'salj' })).map(L => ({
+      const { category } = req.query
+      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === 'choose' || category === undefined)) {
+        console.log('valde 400')
+        return res.status(400).json({ msg: 'Invalid category', status:  400})
+      }
+      var findObj = {}
+      if (category) {
+        findObj = { listingType: 'salj', category}
+      } else if (category === undefined) {
+        findObj = { listingType: 'salj'}
+      } else {
+        return res.status(400).json({ msg: 'Invalid category', status: 400 })
+      }
+
+      const foundListings = (await Listing.find(findObj)).map(L => ({
         id: L._id,
         title: L.title,
         listingType: L.listingType,
