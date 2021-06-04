@@ -27,7 +27,7 @@ export class ListingController {
       const { title, productImage, description, category, listingType, price } = req.body
 
       // Categories will be stored in mongoDB and managed by an admin page in the future.
-      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === 'choose')) {
+      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other')) {
         return res.status(400).json({ msg: 'Invalid category', status:  400})
       }
 
@@ -76,7 +76,7 @@ export class ListingController {
       const { title, productImage, description, category, listingType, price } = req.body
 
       // Categories will be stored in mongoDB and managed by an admin page in the future.
-      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === 'choose')) {
+      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other')) {
         return res.status(400).json({ msg: 'Invalid category', status:  400})
       }
 
@@ -114,7 +114,7 @@ export class ListingController {
   async getBuyListings (req, res, next) { // obs påminner mkt om getSellListings!
     try {
       const { category } = req.query
-      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === 'choose' || category === undefined)) {
+      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === undefined)) {
         return res.status(400).json({ msg: 'Invalid category', status:  400})
       }
       var findObj = {}
@@ -152,7 +152,7 @@ export class ListingController {
   async getSellListings (req, res, next) { // obs påminner mkt om getBuyListings!
     try {
       const { category } = req.query
-      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === 'choose' || category === undefined)) {
+      if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === undefined)) {
         console.log('valde 400')
         return res.status(400).json({ msg: 'Invalid category', status:  400})
       }
