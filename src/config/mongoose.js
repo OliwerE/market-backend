@@ -56,7 +56,7 @@ export const connectDB = async (application) => {
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, // One day
-      sameSite: 'none', // OBS! borde vara lax men endast none fungerar med heroku backend och netlify frontend! Måste vara lax i dev!
+      sameSite: 'lax', // OBS! borde vara lax men endast none fungerar med heroku backend och netlify frontend! Måste vara lax i dev!
       // domain: 'https://market-client-1dv613.netlify.app/',
       secure: true // aktivera när heroku push (ändra till production = true)
     },
