@@ -266,19 +266,14 @@ export class ListingController {
    */
   async getLatestListings (req, res, next) {
     try {
-      const latestListings = (await Listing.find({})).map(L => ({ // { listingType: 'salj' } obs ska hitta både köp och sälj!
+      const latestListings = (await Listing.find({}).sort({ createdAt: -1 }).limit(5)).map(L => ({
         id: L._id,
         title: L.title,
         listingType: L.listingType,
         productImage: L.productImage,
-        // description: L.description,
-        // category: L.category,
         price: L.price
       }))
-
-      // console.log(latestListings.slice(latestListings.length - 5).reverse())
-
-      res.status(200).json(latestListings.slice(latestListings.length - 5).reverse())
+      res.status(200).json(latestListings)
     } catch (err) {
       console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
