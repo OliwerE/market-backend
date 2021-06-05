@@ -63,7 +63,7 @@ export const connectDB = async (application) => {
   }
 
   if (application.get('env') === 'production') { // trusts first proxy and requires secure cookies if in production
-    application.set('trust proxy', 1)
+    application.set('trust proxy', 2)
   }
 
   application.use(session(sessionOptions))
