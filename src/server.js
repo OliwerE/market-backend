@@ -38,11 +38,7 @@ const server = async () => {
   //   next();
   // });
 
-  app.use(csurf({ cookie: {
-      sameSite: 'none', // OBS! borde vara lax men endast none fungerar med heroku backend och netlify frontend! Måste vara lax i dev!
-      // domain: 'https://market-client-1dv613.netlify.app/',
-      secure: true // aktivera när heroku push (ändra till production = true)
-    } }))
+  app.use(csurf())
 
   // app.use((req, res, next) => {
   //   res.cookie('XSRF-TOKEN', req.csrfToken()) // Creates new csrf token on each request.
