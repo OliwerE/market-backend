@@ -41,7 +41,7 @@ export class AuthController {
    */
   getCsrfToken (req, res, next) {
     // res.json({ csrfToken: req.csrfToken() })
-    res.cookie('XSRF-TOKEN', req.csrfToken(), { secure: true, domain: 'market-client-1dv613.netlify.app' }) // , { secure: true, sameSite: 'none' }
+    res.cookie('XSRF-TOKEN', req.csrfToken(), { secure: true, sameSite: 'none' }) // , { secure: true, sameSite: 'none' }
     res.json({})
   }
 
