@@ -41,7 +41,7 @@ export class AuthController {
    */
   getCsrfToken (req, res, next) {
     // res.json({ csrfToken: req.csrfToken() })
-    res.cookie('XSRF-TOKEN', req.csrfToken(), { secure: true })
+    res.cookie('XSRF-TOKEN', req.csrfToken(), { sameSite: 'none' })
     res.json({})
   }
 
