@@ -18,7 +18,7 @@ const server = async () => {
 
   app.use(helmet())
 
-  app.set('trust proxy', 1) // heroku
+  app.set('trust proxy', 2) // heroku
   app.use(cors({ origin: process.env.ORIGIN, credentials: true }))
   app.use(express.json({ limit: '5MB' })) // bestäm limit!
   app.use(logger('dev'))
@@ -48,6 +48,8 @@ const server = async () => {
   // Csurf token errors.
   app.use((err, req, res, next) => {
     if (err.code !== 'EBADCSRFTOKEN') return next(err)
+    console.log(err)
+    console.log(req)
     res.status(403).json({ msg: 'csurf token not valid' })
   })
 
