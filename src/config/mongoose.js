@@ -57,7 +57,7 @@ export const connectDB = async (application) => {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, // One day
       sameSite: 'lax',
-      domain: 'market-client-1dv613.netlify.app',
+      domain: '.market-client-1dv613.netlify.app', // Fungerar fortf inte
       secure: true // aktivera när heroku push (ändra till production = true)
     },
     store: new MongoDBSessionStore({ mongooseConnection: mongoose.connection, clear_interval: 3600 })
