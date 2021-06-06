@@ -23,7 +23,7 @@ const server = async () => {
   app.use(express.json({ limit: '5MB' })) // bestäm limit!
   app.use(logger('dev'))
 
-  // app.use(express.urlencoded()) // fungerar nästan
+  // app.use(express.urlencoded()) // fungerar nästag
   app.use(express.json()) // anv?
 
   // app.use(express.bodyParser()); // funk ej
