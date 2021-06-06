@@ -18,7 +18,7 @@ const server = async () => {
 
   app.use(helmet())
 
-  app.set('trust proxy', 2) // heroku
+  app.set('trust proxy', 999) // heroku
   app.use(cors({ origin: process.env.ORIGIN, credentials: true }))
   app.use(express.json({ limit: '5MB' })) // bestäm limit!
   app.use(logger('dev'))

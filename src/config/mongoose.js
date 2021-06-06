@@ -62,9 +62,9 @@ export const connectDB = async (application) => {
     store: new MongoDBSessionStore({ mongooseConnection: mongoose.connection, clear_interval: 3600 })
   }
 
-  if (application.get('env') === 'production') { // trusts first proxy and requires secure cookies if in production
-    application.set('trust proxy', 2)
-  }
+  // if (application.get('env') === 'production') { // trusts first proxy and requires secure cookies if in production
+  //   application.set('trust proxy', 2)
+  // }
 
   application.use(session(sessionOptions))
 }
