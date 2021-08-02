@@ -18,7 +18,7 @@ const server = async () => {
 
   app.use(helmet())
 
-  app.set('trust proxy', 999) // OBS ÄNDRA TBX TILL 1! var 999
+  app.set('trust proxy', 1)
   app.use(cors({ origin: process.env.ORIGIN, credentials: true }))
   app.use(express.json({ limit: '5MB' })) // bestäm limit!
   app.use(logger('dev'))
