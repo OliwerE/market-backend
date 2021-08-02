@@ -38,7 +38,7 @@ const server = async () => {
   //   next();
   // });
 
-  // app.use(csurf({})) // OBS MÅSTE ANVÄNDAS I PROD!  <--- !!!!
+  app.use(csurf({})) // OBS MÅSTE ANVÄNDAS I PROD!  <--- !!!!
 
   // app.use((req, res, next) => {
   //   res.cookie('XSRF-TOKEN', req.csrfToken()) // Creates new csrf token on each request.
