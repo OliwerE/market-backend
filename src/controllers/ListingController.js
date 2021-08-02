@@ -273,7 +273,7 @@ export class ListingController {
         productImage: L.productImage,
         price: L.price
       }))
-      res.status(200).json(latestListings)
+      res.status(200).json({ data: latestListings })
     } catch (err) {
       console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })

@@ -56,15 +56,14 @@ export const connectDB = async (application) => {
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, // One day
-      sameSite: 'lax',
-      domain: '.market-client-1dv613.netlify.app', // Fungerar fortf inte
-      secure: true // aktivera när heroku push (ändra till production = true)
+      sameSite: 'lax'
+      // domain: '.market-client-1dv613.netlify.app', // i prod
+      // secure: true // i prod
     },
     store: new MongoDBSessionStore({ mongooseConnection: mongoose.connection, clear_interval: 3600 })
   }
 
-  // Med denna config verkar userSession fungera men inte csrf!
-
+  // Med denna config fungerar userSession men fortf inte csrf!
 
   // if (application.get('env') === 'production') { // trusts first proxy and requires secure cookies if in production
   //   application.set('trust proxy', 2)
