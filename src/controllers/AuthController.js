@@ -44,6 +44,7 @@ export class AuthController {
     // console.log('ny token: ' + token)
     // res.json({ csrfToken: token })
 
+    res.status(200)
     res.cookie('XSRF-TOKEN', req.csrfToken(), { secure: true, sameSite: 'lax', domain: '.market-client-1dv613.netlify.app' }) // prod: { secure: true, sameSite: 'lax', domain: '.market-client-1dv613.netlify.app' } dev: { secure: false, sameSite: 'lax' }
     res.json({})
   }
