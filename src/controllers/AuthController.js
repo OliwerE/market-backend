@@ -40,8 +40,11 @@ export class AuthController {
    * @param {Function} next - Next function.
    */
   getCsrfToken (req, res, next) {
-    res.json({ csrfToken: req.csrfToken() })
-    // res.cookie('XSRF-TOKEN', req.csrfToken(), { secure: true, sameSite: 'lax', domain: '.market-client-1dv613.netlify.app' })
+    // const token = req.csrfToken()
+    // console.log('ny token: ' + token)
+    // res.json({ csrfToken: token })
+
+    res.cookie('XSRF-TOKEN', req.csrfToken(), { secure: false, sameSite: 'lax' }) // prod: { secure: true, sameSite: 'lax', domain: '.market-client-1dv613.netlify.app' }
     res.json({})
   }
 

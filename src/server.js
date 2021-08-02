@@ -18,7 +18,7 @@ const server = async () => {
 
   app.use(helmet())
 
-  app.set('trust proxy', 1) // OBS ÄNDRA TBX TILL 1! var 999
+  app.set('trust proxy', 999) // OBS ÄNDRA TBX TILL 1! var 999
   app.use(cors({ origin: process.env.ORIGIN, credentials: true }))
   app.use(express.json({ limit: '5MB' })) // bestäm limit!
   app.use(logger('dev'))
@@ -26,7 +26,7 @@ const server = async () => {
   // app.use(express.urlencoded()) // fungerar nästag
   app.use(express.json()) // anv?
 
-  // app.use(express.bodyParser()); // funk ej
+  // app.use(express.bodyParser()) // funk ej
 
   // app.use(express.urlencoded({ extended: false })) // funkar men fel
 
@@ -38,20 +38,24 @@ const server = async () => {
   //   next();
   // });
 
-  app.use(csurf()) // OBS MÅSTE ANVÄNDAS I PROD!  <--- !!!!
+  app.use(csurf({})) // OBS MÅSTE ANVÄNDAS I PROD!  <--- !!!!
 
   // app.use((req, res, next) => {
   //   res.cookie('XSRF-TOKEN', req.csrfToken()) // Creates new csrf token on each request.
   //   return next()
   // })
 
+  /*
   // Csurf token errors.
   app.use((err, req, res, next) => {
     if (err.code !== 'EBADCSRFTOKEN') return next(err)
     console.log(err)
     console.log(req)
+    console.log(err.code)
+    console.log(req.headers['csrf-token'])
     res.status(403).json({ msg: 'csurf token not valid' })
   })
+  */
 
   app.use('/', router)
 
