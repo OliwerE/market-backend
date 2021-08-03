@@ -45,7 +45,6 @@ const server = async () => {
   //   return next()
   // })
 
-  /*
   // Csurf token errors.
   app.use((err, req, res, next) => {
     if (err.code !== 'EBADCSRFTOKEN') return next(err)
@@ -53,9 +52,8 @@ const server = async () => {
     console.log(req)
     console.log(err.code)
     console.log(req.headers['csrf-token'])
-    res.status(403).json({ msg: 'csurf token not valid' })
+    res.status(403).json({ reason: 'csrfToken-invalid' })
   })
-  */
 
   app.use('/', router)
 
