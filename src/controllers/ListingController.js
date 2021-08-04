@@ -33,8 +33,10 @@ export class ListingController {
 
       if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
         console.log('skapa annons')
+        const imageSize = (productImage.trim().length * (3 / 4)) - 2 // Converts base64 to bytes
+        console.log('imagesize: ' + imageSize)
 
-        if (title.trim().length > 50 || description.trim().length > 5000 || price.trim().length > 20) {
+        if (title.trim().length > 50 || description.trim().length > 5000 || price.trim().length > 20 || imageSize > 5000000) {
           return res.status(400).json({ msg: 'Text from input is too long.', status: 200 })
         }
 
@@ -81,11 +83,13 @@ export class ListingController {
 
       // Categories will be stored in mongoDB and managed by an admin page in the future.
       if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other')) {
-        return res.status(400).json({ msg: 'Invalid category', status:  400})
+        return res.status(400).json({ msg: 'Invalid category', status: 400 })
       }
 
       if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
-        if (title.trim().length > 50 || description.trim().length > 5000 || price.trim().length > 20) {
+        const imageSize = (productImage.trim().length * (3 / 4)) - 2 // Converts base64 to bytes
+        console.log('imagesize: ' + imageSize)
+        if (title.trim().length > 50 || description.trim().length > 5000 || price.trim().length > 20 || imageSize > 5000000) {
           return res.status(400).json({ msg: 'Text from input is too long.', status: 200 })
         }
         const _res = res
