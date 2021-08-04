@@ -20,7 +20,7 @@ const server = async () => {
 
   app.set('trust proxy', 1)
   app.use(cors({ origin: process.env.ORIGIN, credentials: true }))
-  app.use(express.json({ limit: '5MB' })) // bestäm limit!
+  app.use(express.json({ limit: '10MB' }))
   app.use(logger('dev'))
 
   // app.use(express.urlencoded()) // fungerar nästag
