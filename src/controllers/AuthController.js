@@ -53,11 +53,17 @@ export class AuthController {
    * @param {object} req - The request object.
    * @param {object} res - The response object.
    * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
    */
   async postLogin (req, res, next) {
     try {
       const { username, password } = req.body
 
+      if (username.trim().length > 20) {
+        return res.status(400).json({ msg: 'Username too long', status: 400 })
+      } else if (password.trim().length > 100) {
+        return res.status(400).json({ msg: 'Password too long', status: 400 }) 
+      }
       const findUser = await User.find({ username })
 
       console.log(findUser)
