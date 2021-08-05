@@ -109,7 +109,7 @@ export class AuthController {
       // fixa: kontrollera att inga form data är tomma här
 
       if (firstname.trim().length > 0 && lastname.trim().length > 0 && username.trim().length > 0 && phoneNumber.trim().length > 0 && password.trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {
-        if (firstname.trim().length > 1000 && lastname.trim().length > 1000 && username.trim().length > 20 && phoneNumber.trim().length > 1000 && password.trim().length > 100 && email.trim().length > 1000 && city.trim().length > 1000) {
+        if (firstname.trim().length > 1000 || lastname.trim().length > 1000 || username.trim().length > 20 || phoneNumber.trim().length > 1000 || password.trim().length > 100 || email.trim().length > 1000 || city.trim().length > 1000) {
           return res.status(400).json({ msg: 'Ett eller flera fält innehåller för många tecken', status: 400 })
         }
 
@@ -212,6 +212,9 @@ export class AuthController {
       console.log('profil uppdateras!')
       const { firstname, lastname, phoneNumber, city, email, password, newPassword } = req.body
       if (firstname.trim().length > 0 && lastname.trim().length > 0 && phoneNumber.toString().trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) { // obs phonenumber ska ändras till string i db!
+        if (firstname.trim().length > 1000 || lastname.trim().length > 1000 || phoneNumber.toString().trim().length > 1000 || email.trim().length > 0 || city.trim().length > 1000) {
+          return res.status(400).json({ msg: 'Ett eller flera fält innehåller för många tecken', status: 400 })
+        }
         // console.log(newPassword)
 
         const newData = {
@@ -223,6 +226,9 @@ export class AuthController {
         }
 
         if (newPassword) {
+          if (newPassword.trim().length > 100 || password.trim().length > 100) {
+            return res.status(400).json({ msg: 'Ett eller flera fält innehåller för många tecken', status: 400 })
+          }
           const user = await User.find({ username: req.session.user })
           const isPassword = await bcrypt.compare(password, user[0].password)
           if (isPassword) {
