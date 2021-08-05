@@ -62,7 +62,7 @@ export class AuthController {
       if (username.trim().length > 20) {
         return res.status(400).json({ msg: 'Username too long', status: 400 })
       } else if (password.trim().length > 100) {
-        return res.status(400).json({ msg: 'Password too long', status: 400 }) 
+        return res.status(400).json({ msg: 'Password too long', status: 400 })
       }
       const findUser = await User.find({ username })
 
@@ -96,6 +96,7 @@ export class AuthController {
    * @param {object} req - The request object.
    * @param {object} res - The response object.
    * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
    */
   async postRegister (req, res, next) {
     try {
@@ -108,6 +109,10 @@ export class AuthController {
       // fixa: kontrollera att inga form data är tomma här
 
       if (firstname.trim().length > 0 && lastname.trim().length > 0 && username.trim().length > 0 && phoneNumber.trim().length > 0 && password.trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {
+        if (firstname.trim().length > 1000 && lastname.trim().length > 1000 && username.trim().length > 20 && phoneNumber.trim().length > 1000 && password.trim().length > 100 && email.trim().length > 1000 && city.trim().length > 1000) {
+          return res.status(400).json({ msg: 'Ett eller flera fält innehåller för många tecken', status: 400 })
+        }
+
         if (isEmail.validate(email)) {
           // kontrollera unik anv namn
           console.log(username)
