@@ -337,31 +337,38 @@ export class ListingController {
       const pageSize = 8
       const page = parseInt(req.query.page || 0) // First 8 if no query.
       const { listingType, query } = req.query
-      console.log(req.query)
-      console.log(listingType)
-      console.log(query)
-      if ((listingType === 'buy' || listingType === 'sell') && query.trim().length > 0) {
-        let type = 'salj'
-        if (listingType === 'buy') {
-          type = 'kop'
-        }
 
-        const foundListings = (await Listing.find({ listingType: type, $text: { $search: query } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
-          id: L._id,
-          title: L.title,
-          listingType: L.listingType,
-          productImage: L.productImage,
-          description: L.description,
-          category: L.category,
-          price: L.price
-        }))
-
-        const totalListings = await Listing.countDocuments({ listingType: type, $text: { $search: query } })
-        const totalPages = Math.ceil(totalListings / pageSize)
-
-        res.status(200).json({ totalPages, foundListings })
+      if (listingType.trim().length > 1000) {
+        return res.status(400).json({ msg: 'Param ListingType is too long', status: 400 })
+      } else if (query.trim().length > 1000) {
+        return res.status(400).json({ msg: 'Param query is too long', status: 400 })
       } else {
-        res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
+        console.log(req.query)
+        console.log(listingType)
+        console.log(query)
+        if ((listingType === 'buy' || listingType === 'sell') && query.trim().length > 0) {
+          let type = 'salj'
+          if (listingType === 'buy') {
+            type = 'kop'
+          }
+
+          const foundListings = (await Listing.find({ listingType: type, $text: { $search: query } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
+            id: L._id,
+            title: L.title,
+            listingType: L.listingType,
+            productImage: L.productImage,
+            description: L.description,
+            category: L.category,
+            price: L.price
+          }))
+
+          const totalListings = await Listing.countDocuments({ listingType: type, $text: { $search: query } })
+          const totalPages = Math.ceil(totalListings / pageSize)
+
+          res.status(200).json({ totalPages, foundListings })
+        } else {
+          res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
+        }
       }
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
