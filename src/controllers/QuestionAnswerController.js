@@ -22,28 +22,38 @@ export class QuestionAnswerController {
     const questions = [ // Dessa frågor ska hämtas från mongodb??
       {
         id: 1,
-        title: 'Fråga 1',
-        answer: 'Detta är ett svar på fråga 1 som ska visas när användaren klickar på frågan. Flera frågor kan öppnas samtidigt.'
+        title: 'Hur skapar gör man för att skapa ett konto?',
+        answer: 'Tryck på knappen registrera uppe till höger på sidan. Fyll sedan i formuläret och tryck på knappen "Skapa Konto". Om inget felmeddelande visas så öppnas inloggningsfönstret automatiskt, vilket innebär att ditt konto har skapats.'
       },
       {
         id: 2,
-        title: 'Fråga 2',
-        answer: 'Detta är ett svar på fråga 2 som ska visas när användaren klickar på frågan. Flera frågor kan öppnas samtidigt.'
+        title: 'Hur gör man för att återställa lösenordet',
+        answer: 'För att återställa ditt lösenord behöver du kontakta oss. Det gör du enklast genom att använda formuläret till höger. Vi kommer att skicka ett nytt lösenord till din e-post som du kan använda för att logga in och skapa ett nytt eget lösenord.'
       },
       {
         id: 3,
-        title: 'Fråga 3',
-        answer: 'Detta är ett svar på fråga 3 som ska visas när användaren klickar på frågan. Flera frågor kan öppnas samtidigt.'
+        title: 'Hur hanterar ni GDPR?',
+        answer: 'För att läsa hur vi hanterar GDPR se länken "Information om GDPR" i sidfoten.'
       },
       {
         id: 4,
-        title: 'Fråga 4',
-        answer: 'Detta är ett svar på fråga 4 som ska visas när användaren klickar på frågan. Flera frågor kan öppnas samtidigt.'
+        title: 'Hur hanterar ni kakor?',
+        answer: 'För att läsa hur vi hanterar kakor se länken "Information om cookies" i sidfoten.'
       },
       {
         id: 5,
-        title: 'Fråga 5',
-        answer: 'Detta är ett svar på fråga 5 som ska visas när användaren klickar på frågan. Flera frågor kan öppnas samtidigt.'
+        title: 'Har webbplatsen några regler?',
+        answer: 'Ja! Reglerna hittas enklast genom att trycka på länken "Information om villkor" i sidfoten.'
+      },
+      {
+        id: 6,
+        title: 'Har ni ett telefonnummer?',
+        answer: 'Nej. Enklaste sättet att kontakta oss är genom kontaktformuläret till höger.'
+      },
+      {
+        id: 7,
+        title: 'Hur lång tid tar det att få svar via kontaktformuläret?',
+        answer: 'Normalt svarar vi inom 24 timmar.'
       }]
 
     res.json(questions)
