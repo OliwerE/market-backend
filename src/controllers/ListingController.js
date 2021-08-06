@@ -1,13 +1,5 @@
-/**
- * Module represents the listing controller.
- *
- * @author Oliwer Ellréus <oe222ez@student.lnu.se>
- * @version 1.0.0
- */
-
 import { Listing } from '../models/listing-model.js'
 import { User } from '../models/user-model.js'
-
 import moment from 'moment'
 
 /**
@@ -20,9 +12,9 @@ export class ListingController {
    * @param {object} req - The request object.
    * @param {object} res - The response object.
    * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
    */
   async createListing (req, res, next) {
-    console.log('börjar skapa listing!')
     try {
       const { title, productImage, description, category, listingType, price } = req.body
 
@@ -32,9 +24,7 @@ export class ListingController {
       }
 
       if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
-        console.log('skapa annons')
         const imageSize = (productImage.trim().length * (3 / 4)) - 2 // Converts base64 to bytes
-        console.log('imagesize: ' + imageSize)
 
         if (title.trim().length > 50 || description.trim().length > 5000 || price.trim().length > 20 || imageSize > 5000000) {
           return res.status(400).json({ msg: 'Text from input is too long.', status: 200 })
@@ -51,7 +41,6 @@ export class ListingController {
           queue: []
         })
 
-        console.log(createListing)
         let newListingId
         await createListing.save().then(listing => {
           newListingId = listing._id
@@ -59,12 +48,9 @@ export class ListingController {
 
         res.status(200).json({ msg: 'Listing created', status: 200, newListingId: newListingId })
       } else {
-        res.status(400).json({ msg: 'Missing Data', status: 400 }) // kontrollera statuskod!
+        res.status(400).json({ msg: 'Missing Data', status: 400 })
       }
-
-      // res.json('test') // fungerar!
     } catch (err) {
-      console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }
@@ -75,10 +61,10 @@ export class ListingController {
    * @param {object} req - The request object.
    * @param {object} res - The response object.
    * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
    */
   async updateListing (req, res, next) {
     try {
-      console.log(req.params.id)
       const { title, productImage, description, category, listingType, price } = req.body
 
       // Categories will be stored in mongoDB and managed by an admin page in the future.
@@ -88,7 +74,6 @@ export class ListingController {
 
       if (title.trim().length > 0 && productImage.trim().length > 0 && description.trim().length > 0 && category.trim().length > 0 && price.trim().length > 0 && listingType.trim().length > 0) {
         const imageSize = (productImage.trim().length * (3 / 4)) - 2 // Converts base64 to bytes
-        console.log('imagesize: ' + imageSize)
         if (title.trim().length > 50 || description.trim().length > 5000 || price.trim().length > 20 || imageSize > 5000000) {
           return res.status(400).json({ msg: 'Text from input is too long.', status: 200 })
         }
@@ -108,7 +93,7 @@ export class ListingController {
           }
         })
       } else {
-        res.status(400).json({ msg: 'Missing Data', status: 400 }) // kontrollera statuskod!
+        res.status(400).json({ msg: 'Missing Data', status: 400 })
       }
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
@@ -121,20 +106,22 @@ export class ListingController {
    * @param {object} req - The request object.
    * @param {object} res - The response object.
    * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
    */
-  async getBuyListings (req, res, next) { // Ta bort!! ersätt med kombinerad sell/buy!
+  async getBuyListings (req, res, next) {
     try {
       const pageSize = 8
-      const page = parseInt(req.query.page || 0) // First 8 if no query.
+      const page = parseInt(req.query.page || 0) // First 8 if query does not exist.
       const { category } = req.query
       if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === undefined)) {
-        return res.status(400).json({ msg: 'Invalid category', status:  400})
+        return res.status(400).json({ msg: 'Invalid category', status: 400 })
       }
-      var findObj = {}
+      const findObj = {}
       if (category) {
-        findObj = { listingType: 'kop', category}
+        findObj.listingType = 'kop'
+        findObj.category = category
       } else {
-        findObj = { listingType: 'kop'}
+        findObj.listingType = 'kop'
       }
 
       const foundListings = (await Listing.find(findObj).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
@@ -152,7 +139,6 @@ export class ListingController {
 
       res.status(200).json({ totalPages, foundListings })
     } catch (err) {
-      console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }
@@ -163,21 +149,22 @@ export class ListingController {
    * @param {object} req - The request object.
    * @param {object} res - The response object.
    * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
    */
-  async getSellListings (req, res, next) { // obs påminner mkt om getBuyListings!
+  async getSellListings (req, res, next) {
     try {
       const pageSize = 8
       const page = parseInt(req.query.page || 0) // First 8 if no query.
       const { category } = req.query
       if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === undefined)) {
-        console.log('valde 400')
-        return res.status(400).json({ msg: 'Invalid category', status:  400})
+        return res.status(400).json({ msg: 'Invalid category', status: 400 })
       }
-      var findObj = {}
+      const findObj = {}
       if (category) {
-        findObj = { listingType: 'salj', category}
+        findObj.listingType = 'salj'
+        findObj.category = category
       } else if (category === undefined) {
-        findObj = { listingType: 'salj'}
+        findObj.listingType = 'salj'
       } else {
         return res.status(400).json({ msg: 'Invalid category', status: 400 })
       }
@@ -197,7 +184,6 @@ export class ListingController {
 
       res.status(200).json({ totalPages, foundListings })
     } catch (err) {
-      console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }
@@ -228,7 +214,6 @@ export class ListingController {
 
       res.status(200).json({ totalPages, foundListings })
     } catch (err) {
-      console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }
@@ -242,7 +227,6 @@ export class ListingController {
    */
   async getListingById (req, res, next) {
     try {
-      console.log('id: ' + req.params.id)
       const foundListing = (await Listing.find({ _id: req.params.id })).map(L => ({
         id: L._id,
         title: L.title,
@@ -263,7 +247,6 @@ export class ListingController {
 
       res.status(200).json({ foundListing })
     } catch (err) {
-      console.log(err)
       res.status(404).json({ msg: 'Listing not found', status: 404 })
     }
   }
@@ -286,7 +269,6 @@ export class ListingController {
       }))
       res.status(200).json({ data: latestListings })
     } catch (err) {
-      console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }
@@ -304,23 +286,7 @@ export class ListingController {
       await Listing.deleteOne({ _id: listingId })
 
       res.status(200).json({ msg: 'Listing has been removed', status: 200 })
-      /*
-      , (err, response) => {
-        if (err) {
-          res.status(500).json({ msg: 'Internal Server error', status: 500})
-        } else if (response) {
-          if (response.deletedCount === 0) {
-            res.status(500).json({ msg: 'Could not remove listing', status: 500})
-          } else if (response.deletedCount === 1) {
-            res.status(200).json({ msg: 'Listing has been removed', status: 200})
-          } else {
-            res.status(500).json({ msg: 'Internal Server error', status: 500})
-          }
-        }
-      }
-      */
     } catch (err) {
-      console.error(err)
       res.status(500).json({ msg: 'Internal Server error', status: 500 })
     }
   }
@@ -331,6 +297,7 @@ export class ListingController {
    * @param {object} req - The request object.
    * @param {object} res - The response object.
    * @param {Function} next - Next function.
+   * @returns {JSON} - Response data.
    */
   async searchListings (req, res, next) {
     try {
@@ -343,9 +310,6 @@ export class ListingController {
       } else if (query.trim().length > 1000) {
         return res.status(400).json({ msg: 'Param query is too long', status: 400 })
       } else {
-        console.log(req.query)
-        console.log(listingType)
-        console.log(query)
         if ((listingType === 'buy' || listingType === 'sell') && query.trim().length > 0) {
           let type = 'salj'
           if (listingType === 'buy') {

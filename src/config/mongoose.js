@@ -1,12 +1,4 @@
-/**
- * Mongoose configuration module.
- *
- * @author Oliwer Ellréus <oe222ez@student.lnu.se>
- * @version 1.0.0
- */
-
 import mongoose from 'mongoose'
-
 import session from 'express-session'
 import MongoStore from 'connect-mongo'
 
@@ -39,35 +31,25 @@ export const connectDB = async (application) => {
     useUnifiedTopology: true
   })
 
-  const MongoDBSessionStore = MongoStore(session) // Used for session storage in mongoDB
-
-  // const sessionOptions = {
-  //   secret: process.env.SESSION_SECRET,
-  //   resave: false,
-  //   saveUninitialized: false,
-  //   store: new MongoDBSessionStore({ mongooseConnection: mongoose.connection, clear_interval: 3600 })
-  // }
+  const MongoDBSessionStore = MongoStore(session)
 
   const sessionOptions = {
     name: process.env.SESSION_NAME,
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false, // true = skapas cookie innnan aktiv session!
+    saveUninitialized: false,
     cookie: {
       httpOnly: true,
       maxAge: 1000 * 60 * 60 * 24, // One day
-      sameSite: 'lax' // ,
-      // domain: '.market-client-1dv613.netlify.app', // domain: '.market-client-1dv613.netlify.app', // i prod
-      // secure: true // i prod
+      sameSite: 'lax'
     },
     store: new MongoDBSessionStore({ mongooseConnection: mongoose.connection, clear_interval: 3600 })
   }
 
-  // Med denna config fungerar userSession men fortf inte csrf!
-
-  // if (application.get('env') === 'production') { // trusts first proxy and requires secure cookies if in production
-  //   application.set('trust proxy', 2)
-  // }
+  if (application.get('env') === 'production') {
+    sessionOptions.cookie.domain = '.market-client-1dv613.netlify.app'
+    sessionOptions.cookie.secure = true
+  }
 
   application.use(session(sessionOptions))
 }

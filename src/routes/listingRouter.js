@@ -48,7 +48,7 @@ const isOwner = async (req, res, next) => {
     } else {
       return res.status(401).json({ msg: 'Unauthorized: not owner', status: 401 })
     }
-  } catch (err) { // OBS not found blir också 500, ska vara 404!
+  } catch (err) {
     return res.status(500).json({ msg: 'Internal Server Error', status: 500 })
   }
 }
@@ -64,7 +64,7 @@ router.post('/create', authorizeRequest, controller.createListing)
 
 router.post('/update/:id', authorizeRequest, isOwner, controller.updateListing)
 
-router.get('/auth/:id', authorizeRequest, isOwner, controller.getListingById) // Not protected, used to help client authorize
+router.get('/auth/:id', authorizeRequest, isOwner, controller.getListingById)
 router.get('/:id', controller.getListingById)
 
 router.delete('/delete/:id', authorizeRequest, isOwner, controller.deleteListing)

@@ -1,13 +1,4 @@
 /**
- * Module represents the question and answer controller.
- *
- * @author Oliwer Ellréus <oe222ez@student.lnu.se>
- * @version 1.0.0
- */
-
-// import { Listing } from '../models/listing-model.js'
-
-/**
  * Class represents a controller used to render pages for users.
  */
 export class QuestionAnswerController {
@@ -19,7 +10,7 @@ export class QuestionAnswerController {
    * @param {Function} next - Next function.
    */
   getQuestionAndAnswer (req, res, next) {
-    const questions = [ // Dessa frågor ska hämtas från mongodb??
+    const questions = [ // Temporary solution until admin page has been created.
       {
         id: 1,
         title: 'Hur skapar gör man för att skapa ett konto?',

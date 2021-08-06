@@ -1,10 +1,3 @@
-/**
- * Module represents the queue controller.
- *
- * @author Oliwer Ellréus <oe222ez@student.lnu.se>
- * @version 1.0.0
- */
-
 import { Listing } from '../models/listing-model.js'
 import { User } from '../models/user-model.js'
 
@@ -24,7 +17,7 @@ export class QueueController {
     try {
       const pageSize = 8
       const page = parseInt(req.query.page || 0) // First 8 if no query.
-      
+
       const foundListings = (await Listing.find({ queue: req.session.user }).sort({ _id: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
         id: L._id,
         title: L.title,

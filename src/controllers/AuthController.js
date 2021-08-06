@@ -1,13 +1,5 @@
-/**
- * Module represents the auth controller.
- *
- * @author Oliwer Ellréus <oe222ez@student.lnu.se>
- * @version 1.0.0
- */
-
 import { User } from '../models/user-model.js'
 import bcrypt from 'bcrypt'
-
 import isEmail from 'isemail'
 
 /**
@@ -23,8 +15,6 @@ export class AuthController {
    * @returns {JSON} - Response data.
    */
   checkLoggedIn (req, res, next) {
-    console.log(req.session.user)
-
     if (req.session.user) {
       return res.json({ msg: 'user logged in!', isAuth: true, username: req.session.user })
     } else {
@@ -41,10 +31,6 @@ export class AuthController {
    */
   getCsrfToken (req, res, next) {
     res.json({ csrfToken: req.csrfToken() })
-
-    // res.cookie fungerar, token i json fungerar inte..
-    // res.cookie('XSRF-TOKEN', req.csrfToken(), { secure: true, sameSite: 'lax', domain: '.market-client-1dv613.netlify.app' }) // prod: { secure: true, sameSite: 'lax', domain: '.market-client-1dv613.netlify.app' } dev: { secure: false, sameSite: 'lax' }
-    // res.json({})
   }
 
   /**
@@ -66,26 +52,18 @@ export class AuthController {
       }
       const findUser = await User.find({ username })
 
-      console.log(findUser)
-
       if (findUser.length === 1 && findUser[0].username === username) {
-        // jämför lösenord
-
         const isPassword = await bcrypt.compare(password, findUser[0].password)
-
         if (isPassword) {
           req.session.user = username
           res.status(200).json({ msg: ' Logged In Successfully', status: 200 })
         } else {
-          console.log('Fel lösen')
           res.status(401).json({ msg: 'Wrong password', status: 401 })
         }
       } else {
-        console.log('error flera users eller inga')
-        res.status(401).json({ msg: 'Invalid credentials', status: 401 }) // 401 rätt status?
+        res.status(401).json({ msg: 'Invalid credentials', status: 401 })
       }
     } catch (err) {
-      console.log(err)
       res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }
@@ -100,13 +78,7 @@ export class AuthController {
    */
   async postRegister (req, res, next) {
     try {
-      console.log('----register----')
-      console.log(req.body)
-      console.log('----/register----')
-
       const { firstname, lastname, username, phoneNumber, password, city, email } = req.body
-
-      // fixa: kontrollera att inga form data är tomma här
 
       if (firstname.trim().length > 0 && lastname.trim().length > 0 && username.trim().length > 0 && phoneNumber.trim().length > 0 && password.trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {
         if (firstname.trim().length > 1000 || lastname.trim().length > 1000 || username.trim().length > 20 || phoneNumber.trim().length > 1000 || password.trim().length > 100 || email.trim().length > 1000 || city.trim().length > 1000) {
@@ -114,13 +86,9 @@ export class AuthController {
         }
 
         if (isEmail.validate(email)) {
-          // kontrollera unik anv namn
-          console.log(username)
           const findUsers = await User.find({ username: username })
-          console.log(findUsers)
 
           if (findUsers.length === 0) {
-            console.log(firstname)
             const createUser = new User({
               firstname,
               lastname,
@@ -131,13 +99,11 @@ export class AuthController {
               email
             })
 
-            console.log(createUser)
             await createUser.save()
 
-            // req.session.userName = username // om skapa session direkt!
-            res.status(200).json({ msg: 'User created, please login', status: 200 }) // lägg till statuskod!
+            res.status(200).json({ msg: 'User created, please login', status: 200 })
           } else {
-            res.status(409).json({ msg: 'User already exist', status: 409 }) // lägg till statuskod!
+            res.status(409).json({ msg: 'User already exist', status: 409 })
           }
         } else {
           res.status(400).json({ msg: 'Email not correct', status: 400 })
@@ -146,8 +112,7 @@ export class AuthController {
         res.status(400).json({ msg: 'Invalid data', status: 400 })
       }
     } catch (err) {
-      console.log(err)
-      res.status(500).json({ msg: 'internal server error', status: 500 }) // byt till createError!
+      res.status(500).json({ msg: 'internal server error', status: 500 })
     }
   }
 
@@ -160,7 +125,7 @@ export class AuthController {
    */
   logout (req, res, next) {
     req.session.destroy()
-    res.clearCookie(process.env.SESSION_NAME).json({ msg: 'you have been logged out!', successfulLogout: true }) // fix statuskod
+    res.clearCookie(process.env.SESSION_NAME).json({ msg: 'you have been logged out!', successfulLogout: true })
   }
 
   /**
@@ -190,12 +155,10 @@ export class AuthController {
       email: U.email,
       city: U.city
     }))
-    console.log(user)
     if (user.length === 1) {
       res.json(user[0])
     } else {
-      // ERROR FIXA!
-      console.log('error')
+      res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }
 
@@ -209,13 +172,11 @@ export class AuthController {
    */
   async postUpdateProfile (req, res, next) {
     try {
-      console.log('profil uppdateras!')
       const { firstname, lastname, phoneNumber, city, email, password, newPassword } = req.body
-      if (firstname.trim().length > 0 && lastname.trim().length > 0 && phoneNumber.toString().trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) { // obs phonenumber ska ändras till string i db!
+      if (firstname.trim().length > 0 && lastname.trim().length > 0 && phoneNumber.toString().trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {
         if (firstname.trim().length > 1000 || lastname.trim().length > 1000 || phoneNumber.toString().trim().length > 1000 || email.trim().length > 0 || city.trim().length > 1000) {
           return res.status(400).json({ msg: 'Ett eller flera fält innehåller för många tecken', status: 400 })
         }
-        // console.log(newPassword)
 
         const newData = {
           firstname,
@@ -234,20 +195,17 @@ export class AuthController {
           if (isPassword) {
             newData.password = await bcrypt.hash(newPassword, 8)
           } else {
-            return res.status(400).json({ msg: 'Current password does not match password in database', status: 400 }) // Rätt statuskod??
+            return res.status(400).json({ msg: 'Current password does not match password in database', status: 400 })
           }
-        } else {
-          console.log('lösenord behöver inte uppdateras!')
         }
 
         await User.updateOne({ username: req.session.user }, newData)
 
-        return res.status(200).json({ msg: 'User updated successfully', status: 200 }) // rätt statuskod??
+        return res.status(200).json({ msg: 'User updated successfully', status: 200 })
       } else {
         return res.status(400).json({ msg: 'Missing key or keys in request!', status: 20400 })
       }
     } catch (err) {
-      console.log(err)
       return res.status(500).json({ msg: 'Internal server error', status: 500 })
     }
   }

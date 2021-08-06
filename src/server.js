@@ -5,7 +5,6 @@ import logger from 'morgan'
 import cors from 'cors'
 import { router } from './routes/router.js'
 import { connectDB } from './config/mongoose.js'
-// import bodyParser from 'body-parser'
 import csurf from 'csurf'
 
 /**
@@ -13,45 +12,18 @@ import csurf from 'csurf'
  */
 const server = async () => {
   const app = express()
-
   await connectDB(app)
-
   app.use(helmet())
-
   app.set('trust proxy', 1)
   app.use(cors({ origin: process.env.ORIGIN, credentials: true }))
   app.use(express.json({ limit: '10MB' }))
   app.use(logger('dev'))
-
-  // app.use(express.urlencoded()) // fungerar nästag
-  app.use(express.json()) // anv?
-
-  // app.use(express.bodyParser()) // funk ej
-
-  // app.use(express.urlencoded({ extended: false })) // funkar men fel
-
-  // app.use(express.urlencoded());
-
-  // app.use(function(req, res, next) {
-  //   res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-  //   res.header('Access-Control-Allow-Credentials','true')
-  //   next();
-  // });
-
+  app.use(express.json())
   app.use(csurf({})) // OBS MÅSTE ANVÄNDAS I PROD!  <--- !!!!
-
-  // app.use((req, res, next) => {
-  //   res.cookie('XSRF-TOKEN', req.csrfToken()) // Creates new csrf token on each request.
-  //   return next()
-  // })
 
   // Csurf token errors.
   app.use((err, req, res, next) => {
     if (err.code !== 'EBADCSRFTOKEN') return next(err)
-    console.log(err)
-    console.log(req)
-    console.log(err.code)
-    console.log(req.headers['csrf-token'])
     res.status(403).json({ reason: 'csrfToken-invalid' })
   })
 
