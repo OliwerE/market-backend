@@ -248,6 +248,7 @@ export class ListingController {
       // User data for listing
       foundListing[0].phoneNumber = user.phoneNumber
       foundListing[0].email = user.email
+      foundListing[0].city = user.city
 
       res.status(200).json({ foundListing })
     } catch (err) {
