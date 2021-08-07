@@ -21,7 +21,7 @@ const server = async () => {
   app.use(express.json())
   app.use(csurf({}))
 
-  // Csurf token errors.
+  // Csrf token errors.
   app.use((err, req, res, next) => {
     if (err.code !== 'EBADCSRFTOKEN') return next(err) // Invalid csrf token
     res.status(403).json({ reason: 'csrfToken-invalid' })
