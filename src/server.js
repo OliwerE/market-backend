@@ -19,11 +19,11 @@ const server = async () => {
   app.use(express.json({ limit: '10MB' }))
   app.use(logger('dev'))
   app.use(express.json())
-  app.use(csurf({})) // OBS MÅSTE ANVÄNDAS I PROD!  <--- !!!!
+  app.use(csurf({}))
 
   // Csurf token errors.
   app.use((err, req, res, next) => {
-    if (err.code !== 'EBADCSRFTOKEN') return next(err)
+    if (err.code !== 'EBADCSRFTOKEN') return next(err) // Invalid csrf token
     res.status(403).json({ reason: 'csrfToken-invalid' })
   })
 

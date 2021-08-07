@@ -46,6 +46,7 @@ export const connectDB = async (application) => {
     store: new MongoDBSessionStore({ mongooseConnection: mongoose.connection, clear_interval: 3600 })
   }
 
+  // Production session options
   if (application.get('env') === 'production') {
     sessionOptions.cookie.domain = '.market-client-1dv613.netlify.app'
     sessionOptions.cookie.secure = true

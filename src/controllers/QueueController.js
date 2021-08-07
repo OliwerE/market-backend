@@ -16,7 +16,7 @@ export class QueueController {
   async getUserInQueueListings (req, res, next) {
     try {
       const pageSize = 8
-      const page = parseInt(req.query.page || 0) // First 8 if no query.
+      const page = parseInt(req.query.page || 0) // First 8 listings if no query.
 
       const foundListings = (await Listing.find({ queue: req.session.user }).sort({ _id: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
         id: L._id,
@@ -28,6 +28,7 @@ export class QueueController {
         price: L.price
       }))
 
+      // Number of pages
       const totalListings = await Listing.countDocuments({ queue: req.session.user })
       const totalPages = Math.ceil(totalListings / pageSize)
 
@@ -82,7 +83,7 @@ export class QueueController {
       const db = (await Listing.find({ _id: req.params.id })).map(L => ({
         queue: L.queue
       }))
-      db[0].queue.push(req.session.user) // Adds current user to queue
+      db[0].queue.push(req.session.user) // Adds current user to the queue
 
       await Listing.updateOne({ _id: req.params.id }, { queue: db[0].queue })
 
@@ -173,7 +174,7 @@ export class QueueController {
       }))
 
       if (req.body.index > -1 && req.body.index < db[0].queue.length) {
-        db[0].queue.splice(req.body.index, 1)
+        db[0].queue.splice(req.body.index, 1) // Removes user from the queue
       } else {
         res.status(404).json({ msg: 'User not in queue', status: 404 })
       }

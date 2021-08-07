@@ -111,7 +111,7 @@ export class ListingController {
   async getBuyListings (req, res, next) {
     try {
       const pageSize = 8
-      const page = parseInt(req.query.page || 0) // First 8 if query does not exist.
+      const page = parseInt(req.query.page || 0) // First 8 listings if query does not exist.
       const { category } = req.query
       if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === undefined)) {
         return res.status(400).json({ msg: 'Invalid category', status: 400 })
@@ -134,6 +134,7 @@ export class ListingController {
         price: L.price
       }))
 
+      // Number of pages
       const totalListings = await Listing.countDocuments(findObj)
       const totalPages = Math.ceil(totalListings / pageSize)
 
@@ -154,7 +155,7 @@ export class ListingController {
   async getSellListings (req, res, next) {
     try {
       const pageSize = 8
-      const page = parseInt(req.query.page || 0) // First 8 if no query.
+      const page = parseInt(req.query.page || 0) // First 8 listings if no query.
       const { category } = req.query
       if (!(category === 'electronics' || category === 'vehicles' || category === 'leisure' || category === 'household' || category === 'furnishings' || category === 'clothes' || category === 'toys' || category === 'other' || category === undefined)) {
         return res.status(400).json({ msg: 'Invalid category', status: 400 })
@@ -179,6 +180,7 @@ export class ListingController {
         price: L.price
       }))
 
+      // Number of pages
       const totalListings = await Listing.countDocuments(findObj)
       const totalPages = Math.ceil(totalListings / pageSize)
 
@@ -209,6 +211,7 @@ export class ListingController {
         price: L.price
       }))
 
+      // Number of pages
       const totalListings = await Listing.countDocuments({ owner: req.session.user })
       const totalPages = Math.ceil(totalListings / pageSize)
 
@@ -242,6 +245,7 @@ export class ListingController {
 
       const user = (await User.findOne({ username: foundListing[0].owner }))
 
+      // User data for listing
       foundListing[0].phoneNumber = user.phoneNumber
       foundListing[0].email = user.email
 
@@ -302,7 +306,7 @@ export class ListingController {
   async searchListings (req, res, next) {
     try {
       const pageSize = 8
-      const page = parseInt(req.query.page || 0) // First 8 if no query.
+      const page = parseInt(req.query.page || 0) // First 8 listings if no query.
       const { listingType, query } = req.query
 
       if (listingType.trim().length > 1000) {
@@ -326,6 +330,7 @@ export class ListingController {
             price: L.price
           }))
 
+          // Number of pages
           const totalListings = await Listing.countDocuments({ listingType: type, $text: { $search: query } })
           const totalPages = Math.ceil(totalListings / pageSize)
 
