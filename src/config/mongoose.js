@@ -1,3 +1,10 @@
+/**
+ * Mongoose configuration module.
+ *
+ * @author Oliwer Ellréus <oe222ez@student.lnu.se>
+ * @version 1.0.0
+ */
+
 import mongoose from 'mongoose'
 import session from 'express-session'
 import MongoStore from 'connect-mongo'

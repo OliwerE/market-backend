@@ -1,3 +1,10 @@
+/**
+ * Module represents the auth controller.
+ *
+ * @author Oliwer Ellréus <oe222ez@student.lnu.se>
+ * @version 1.0.0
+ */
+
 import { User } from '../models/user-model.js'
 import bcrypt from 'bcrypt'
 import isEmail from 'isemail'

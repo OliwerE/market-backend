@@ -1,4 +1,11 @@
 /**
+ * Module represents the question and answer controller.
+ *
+ * @author Oliwer Ellréus <oe222ez@student.lnu.se>
+ * @version 1.0.0
+ */
+
+/**
  * Class represents a controller used to render pages for users.
  */
 export class QuestionAnswerController {

@@ -1,3 +1,10 @@
+/**
+ * Module represents the listing controller.
+ *
+ * @author Oliwer Ellréus <oe222ez@student.lnu.se>
+ * @version 1.0.0
+ */
+
 import { Listing } from '../models/listing-model.js'
 import { User } from '../models/user-model.js'
 import moment from 'moment'
