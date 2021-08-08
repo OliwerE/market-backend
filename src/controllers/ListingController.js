@@ -328,8 +328,9 @@ export class ListingController {
             type = 'kop'
           }
 
+          // Kommer hit men foundListings får error 500...
           // listingType: 'salj', $text: { $search: 'diagram' }
-          const foundListings = (await Listing.find({ title: 'diagram' }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
+          const foundListings = (await Listing.find({ _id: '610fb0f946cb2400151a2a53' }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
             id: L._id,
             title: L.title,
             listingType: L.listingType,
@@ -339,14 +340,11 @@ export class ListingController {
             price: L.price
           }))
 
-          /*
           // Number of pages
           const totalListings = await Listing.countDocuments({ listingType: type, $text: { $search: query } })
           const totalPages = Math.ceil(totalListings / pageSize)
-          */
 
-          res.json({ msg: 'test' })
-          // res.status(200).json({ totalPages, foundListings })
+          res.status(200).json({ totalPages, foundListings })
         } else {
           res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
         }
