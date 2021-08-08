@@ -328,7 +328,6 @@ export class ListingController {
             type = 'kop'
           }
 
-          /*
           const foundListings = (await Listing.find({ listingType: 'salj', $text: { $search: 'diagram' } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
             id: L._id,
             title: L.title,
@@ -338,7 +337,6 @@ export class ListingController {
             category: L.category,
             price: L.price
           }))
-          */
 
           /*
           // Number of pages
