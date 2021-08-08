@@ -321,18 +321,14 @@ export class ListingController {
         return res.status(400).json({ msg: 'Param ListingType is too long', status: 400 })
       } else if (query.trim().length > 1000) {
         return res.status(400).json({ msg: 'Param query is too long', status: 400 })
-      }
-
-      res.json({ msg: 'test' })
-
-      /*
-      else {
+      } else {
         if ((listingType === 'buy' || listingType === 'sell') && query.trim().length > 0) {
           let type = 'salj'
           if (listingType === 'buy') {
             type = 'kop'
           }
 
+          /*
           const foundListings = (await Listing.find({ listingType: 'salj', $text: { $search: 'diagram' } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
             id: L._id,
             title: L.title,
@@ -342,17 +338,20 @@ export class ListingController {
             category: L.category,
             price: L.price
           }))
+          */
 
+          /*
           // Number of pages
           const totalListings = await Listing.countDocuments({ listingType: type, $text: { $search: query } })
           const totalPages = Math.ceil(totalListings / pageSize)
+          */
 
-          res.status(200).json({ totalPages, foundListings })
+          res.json({ msg: 'test' })
+          // res.status(200).json({ totalPages, foundListings })
         } else {
           res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
         }
       }
-      */
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
