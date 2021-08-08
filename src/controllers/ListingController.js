@@ -348,7 +348,7 @@ export class ListingController {
         }
       }
     } catch (err) {
-      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
+      res.status(501).json({ msg: 'Internal Server Error', status: 500 })
     }
   }
 }
