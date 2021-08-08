@@ -328,9 +328,8 @@ export class ListingController {
             type = 'kop'
           }
 
-          // Kommer hit men foundListings får error 500...
-          // listingType: 'salj', $text: { $search: 'diagram' }
-          const foundListings = (await Listing.find({ _id: query }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
+          // listingType: 'salj', $text: { $search: 'diagram' } // detta är felet troligen fungerar ej search i prod...
+          const foundListings = (await Listing.find({ listingType: type, _id: query }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
             id: L._id,
             title: L.title,
             listingType: L.listingType,
@@ -353,7 +352,7 @@ export class ListingController {
         }
       }
     } catch (err) {
-      res.status(50).json({ msg: 'Internal Server Error', status: 500 })
+      res.status(500).json({ msg: 'Internal Server Error', status: 500 })
     }
   }
 }
