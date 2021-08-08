@@ -340,17 +340,20 @@ export class ListingController {
             price: L.price
           }))
 
+          /*
           // Number of pages
           const totalListings = await Listing.countDocuments({ listingType: type, $text: { $search: query } })
           const totalPages = Math.ceil(totalListings / pageSize)
+          */
 
-          res.status(200).json({ totalPages, foundListings })
+          // totalPages,
+          res.status(200).json({ foundListings })
         } else {
           res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
         }
       }
     } catch (err) {
-      res.status(501).json({ msg: 'Internal Server Error', status: 500 })
+      res.status(50).json({ msg: 'Internal Server Error', status: 500 })
     }
   }
 }
