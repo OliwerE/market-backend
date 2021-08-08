@@ -330,7 +330,7 @@ export class ListingController {
 
           // Kommer hit men foundListings får error 500...
           // listingType: 'salj', $text: { $search: 'diagram' }
-          const foundListings = (await Listing.find({ _id: '610fb0f946cb2400151a2a53' }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
+          const foundListings = (await Listing.find({ _id: query }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
             id: L._id,
             title: L.title,
             listingType: L.listingType,
