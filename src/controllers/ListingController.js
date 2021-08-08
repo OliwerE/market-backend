@@ -328,7 +328,7 @@ export class ListingController {
             type = 'kop'
           }
 
-          const foundListings = (await Listing.find({ listingType: type, $text: { $search: query } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
+          const foundListings = (await Listing.find({ listingType: 'salj', $text: { $search: 'diagram' } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
             id: L._id,
             title: L.title,
             listingType: L.listingType,
