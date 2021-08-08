@@ -317,6 +317,7 @@ export class ListingController {
       const page = parseInt(req.query.page || 0) // First 8 listings if no query.
       const { listingType, query } = req.query
 
+      /*
       if (listingType.trim().length > 1000) {
         return res.status(400).json({ msg: 'Param ListingType is too long', status: 400 })
       } else if (query.trim().length > 1000) {
@@ -347,6 +348,7 @@ export class ListingController {
           res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
         }
       }
+      */
     } catch (err) {
       res.status(501).json({ msg: 'Internal Server Error', status: 500 })
     }
