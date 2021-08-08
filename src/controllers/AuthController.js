@@ -181,7 +181,7 @@ export class AuthController {
     try {
       const { firstname, lastname, phoneNumber, city, email, password, newPassword } = req.body
       if (firstname.trim().length > 0 && lastname.trim().length > 0 && phoneNumber.toString().trim().length > 0 && email.trim().length > 0 && city.trim().length > 0) {
-        if (firstname.trim().length > 1000 || lastname.trim().length > 1000 || phoneNumber.toString().trim().length > 1000 || email.trim().length > 0 || city.trim().length > 1000) {
+        if (firstname.trim().length > 1000 || lastname.trim().length > 1000 || phoneNumber.toString().trim().length > 1000 || email.trim().length > 1000 || city.trim().length > 1000) {
           return res.status(400).json({ msg: 'Ett eller flera fält innehåller för många tecken', status: 400 })
         }
 
