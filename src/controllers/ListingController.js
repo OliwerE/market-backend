@@ -328,9 +328,7 @@ export class ListingController {
             type = 'kop'
           }
 
-          
-          // { listingType: type, $text: { $search: query } }
-          const foundListings = (await Listing.find({ $search: { index: 'listingIndex', text: { query: query, path: { wildcard: '*' } } } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
+          const foundListings = (await Listing.find({ listingType: type, $text: { $search: query } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
             id: L._id,
             title: L.title,
             listingType: L.listingType,
@@ -351,6 +349,7 @@ export class ListingController {
       }
     } catch (err) {
       res.status(500).json({ msg: 'Internal Server Error', status: 500 })
+      console.log(err)
     }
   }
 }
