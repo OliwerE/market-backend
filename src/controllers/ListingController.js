@@ -327,9 +327,7 @@ export class ListingController {
           if (listingType === 'buy') {
             type = 'kop'
           }
-
-          // listingType: 'salj', $text: { $search: 'diagram' } // detta är felet troligen fungerar ej search i prod...
-          const foundListings = (await Listing.find({ listingType: type, _id: query }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
+          const foundListings = (await Listing.find({ listingType: type, $text: { $search: query } }).sort({ createdAt: -1 }).limit(pageSize).skip(pageSize * page)).map(L => ({
             id: L._id,
             title: L.title,
             listingType: L.listingType,
@@ -339,14 +337,11 @@ export class ListingController {
             price: L.price
           }))
 
-          /*
           // Number of pages
           const totalListings = await Listing.countDocuments({ listingType: type, $text: { $search: query } })
           const totalPages = Math.ceil(totalListings / pageSize)
-          */
 
-          // totalPages,
-          res.status(200).json({ foundListings })
+          res.status(200).json({ totalPages, foundListings })
         } else {
           res.status(400).json({ msg: 'Missing query or listingType', status: 400 })
         }
